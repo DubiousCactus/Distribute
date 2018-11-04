@@ -1,0 +1,1 @@
+This folder contains the REST API, as well as the RPC server for slaves to register themselfs, and a RPC client which the REST API will utilize to communicate with the registerd slave nodes.

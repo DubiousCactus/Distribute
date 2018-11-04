@@ -1,0 +1,1 @@
+This folder contains the RPC for the slave nodes, these contains the server for the nodes to rechive data from the client (found in the Lead folder from root) and the RPC client connection to register themself, to the lead node
