@@ -32,7 +32,13 @@ def remote_call(payload):
 
 
 def main():
-    payload = make_payload("registerNode", {"ip": get_ip(), "mac": get_mac()})
+    payload = make_payload(
+        "registerNode",
+        {
+            "ip": get_ip(),
+            "mac": hex(get_mac())
+        }
+    )
     response = remote_call(payload)
 
     #assert response["result"] == 3
