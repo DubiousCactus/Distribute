@@ -1,13 +1,12 @@
 <html>
    <body>
-   
-      <form action = "http://localhost:5000/storage" method = "POST" 
+      <form action = "http://172.24.1.1:5000/storage" method = "POST" 
          enctype = "multipart/form-data">
          <input type = "file" name = "file" />
          <input type = "submit"/>
       </form>
 	  
-	   <form id="getform"  action = "http://localhost:5000/storage" method = "GET" 
+	   <form id="getform"  action = "http://172.24.1.1:5000/storage" method = "GET" 
          enctype = "multipart/form-data">
 		  Enter filename:<br>
 		  <input type="text" name="filename"> 
