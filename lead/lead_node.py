@@ -3,7 +3,6 @@
 import os
 import errno
 from node import Node
-
 from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
@@ -19,7 +18,6 @@ class LeadNode:
         self.rpc_port = rpc_port
         self.nodes = []
 
-
     @app.route('/')
     def showpage():
        return render_template('upload.html')
@@ -29,19 +27,31 @@ class LeadNode:
        if request.method == 'POST':
           f = request.files['file']
           f.save(secure_filename(f.filename))
+          # (TESTING REPLICAITON)
+          # IF TRUE SEND TO RANDOM NODE 
+          # ELSE SEND TO X NODES
           return { "code": 200, "msg": 'File uploaded successfully.' }
 
        if request.method == 'GET':
+           # GET THE FILE FROM A NODE
              return 'returned '+ request.args["filename"]+' successfully'
              #return 'returning '+ fileEntered +' successfully'
 
-
+    def getCodeVersion():
+        pass
+    def updateCodeOnSlave(ip):
+        #IMPLEMENT THEO CODE TO UPDATE THE CLIENT
+        pass
     @dispatcher.add_method
     def registerNode(self, **kwargs):
         print('New connection established with ' + kwargs["ip"])
-        self.nodes[kwargs["mac"]] = Node(self.lastId + 1, kwargs["mac"], kwargs["ip"])
-
-        return { "code": 200, "msg": "Success." }
+        #UPDATE THE CODE ON THAT NODE
+        if(kwargs["code"] > getCodeVersion()):
+            updateCodeOnSlave(kwargs["ip"])
+            return { "code": 200, "msg": "Updating slave..." }
+        else:
+            self.nodes[kwargs["mac"]] = Node(self.lastId + 1, kwargs["mac"], kwargs["ip"])
+            return { "code": 200, "msg": "Success." }
 
 
     #APPLICATION
