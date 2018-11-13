@@ -35,4 +35,3 @@ class RestApi:
 
     def start(self):
         app.run(debug=True, host=self.ip, port=self.port)
-        

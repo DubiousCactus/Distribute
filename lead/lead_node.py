@@ -3,16 +3,11 @@
 import os
 import json
 import errno
+import rpc_api
+import rest_api
 
 from node import Node
 from subprocess import call
-from werkzeug import secure_filename
-from werkzeug.serving import run_simple
-from werkzeug.wrappers import Request, Response
-from flask import Flask, render_template, request
-from jsonrpc import JSONRPCResponseManager, dispatcher
-import rest_api
-import rpc_api
 
 app = Flask(__name__)
 
@@ -24,11 +19,15 @@ class LeadNode:
         self.rpc_port = config['rpc_port']
         self._version = config['version']
         self.nodes = []
+        self.rest = rest_api(self.nodes,self.api_host,self.api_port)
+        self.rpc = rest_api(self.nodes,self.rpc_host,self.rpc_port,self.version)
+
+    def start(self):
+        self.rest.start()
+        self.rpc.start()
+
 
 if __name__ == '__main__':
     with open('config.json', 'r') as config_file:
         leadNode = LeadNode(config_file)
-        rest = rest_api(self.nodes,self.api_host,self.api_port)
-        rpc = rest_api(self.nodes,self.rpc_host,self.rpc_port,self.version)
-        rest.start()
-        rpc.start()
+        leadNode.start()
