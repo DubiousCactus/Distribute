@@ -5,6 +5,10 @@ import requests
 import netifaces as ni
 
 from uuid import getnode as get_mac
+from werkzeug import secure_filename
+from werkzeug.serving import run_simple
+from werkzeug.wrappers import Request, Response
+from jsonrpc import JSONRPCResponseManager, dispatcher
 
 class ClientNode:
 
@@ -40,11 +44,11 @@ class ClientNode:
         return requests.post(url, data=json.dumps(payload), headers=headers).json()
 
     def register(self):
-        payload = make_payload(
+        payload = self.make_payload(
             "registerNode",
             {
-                "ip": get_ip(),
-                "mac": hex(get_mac()),
+                "ip": self.get_ip(),
+                "mac": hex(self.get_mac()),
                 "code": self._version
             }
         )
