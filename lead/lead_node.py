@@ -18,8 +18,8 @@ app = Flask(__name__)
 
 class LeadNode:
     def __init__(self, config):
-        self.api_addr = config['api_addr']
-        self.rpc_addr = config['rpc_addr']
+        self.api_host = config['api_host']
+        self.rpc_host = config['rpc_host']
         self.api_port = config['api_port']
         self.rpc_port = config['rpc_port']
         self._version = config['version']
@@ -28,7 +28,7 @@ class LeadNode:
 if __name__ == '__main__':
     with open('config.json', 'r') as config_file:
         leadNode = LeadNode(config_file)
-        rest = rest_api(self.nodes,self.api_addr,self.api_port)
-        rpc = rest_api(self.nodes,self.rpc_addr,self.rpc_port,self.version)
+        rest = rest_api(self.nodes,self.api_host,self.api_port)
+        rpc = rest_api(self.nodes,self.rpc_host,self.rpc_port,self.version)
         rest.start()
         rpc.start()
