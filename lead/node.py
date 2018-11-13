@@ -11,7 +11,7 @@ Node class for the LeadNode project
 """
 import requests
 import json
-
+#This class defines a Node/Slave as a object, and is enable to call the Node/Slave remote functions
 class Node:
 
     def __init__(self, id, mac, ip):
