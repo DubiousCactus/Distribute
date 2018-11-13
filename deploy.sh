@@ -29,6 +29,8 @@ function deploy_to {
 	echo "[*] Deploying code to $1 ..."
 	set -e;
 	sshpass -p "$password" scp -r $folder "$username"@"$1":~/ &>/dev/null || EXIT_CODE=$? && true;
+	echo "[*] Restarting target process ..."
+	sshpass -p "$password" ssh -c "pkill python3" "$username"@"$1"
 	if [[ EXIT_CODE -eq 1 ]]; then
 		echo "[!] Node down."
 	else

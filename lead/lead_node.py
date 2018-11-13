@@ -1,8 +1,11 @@
 #! /usr/bin/python3
 
 import os
+import json
 import errno
+
 from node import Node
+from subprocess import call
 from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
@@ -12,10 +15,12 @@ from jsonrpc import JSONRPCResponseManager, dispatcher
 app = Flask(__name__)
 
 class LeadNode:
-    def __init__(self, addr, api_port, rpc_port):
-        self.addr = addr
-        self.api_port = api_port
-        self.rpc_port = rpc_port
+    def __init__(self, config):
+        self.api_addr = config['api_addr']
+        self.rpc_addr = config['rpc_addr']
+        self.api_port = config['api_port']
+        self.rpc_port = config['rpc_port']
+        self._version = config['version']
         self.nodes = []
 
     @app.route('/')
@@ -37,11 +42,13 @@ class LeadNode:
              return 'returned '+ request.args["filename"]+' successfully'
              #return 'returning '+ fileEntered +' successfully'
 
-    def getCodeVersion():
-        pass
-    def updateCodeOnSlave(ip):
-        #IMPLEMENT THEO CODE TO UPDATE THE CLIENT
-        pass
+    def getCodeVersion(self):
+        return self._version
+
+    def updateCodeOnSlave(self, ip):
+        # TODO: Maybe sanitize the ip first ?
+        call(['deploy.sh', ip])
+
     @dispatcher.add_method
     def registerNode(self, **kwargs):
         print('New connection established with ' + kwargs["ip"])
@@ -67,5 +74,6 @@ class LeadNode:
 
 
 if __name__ == '__main__':
-    leadNode = LeadNode("172.24.1.1", 5000, 5001)
-    leadNode.start()
+    with open('config.json', 'r') as config_file:
+        leadNode = LeadNode(config_file)
+        leadNode.start()
