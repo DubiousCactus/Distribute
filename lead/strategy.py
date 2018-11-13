@@ -1,17 +1,15 @@
 from abc import ABC, abstractmethod
+import json
 
 #This class is abstract and ment to act according to the the config.json
 class Strategy:
     @abstractmethod
-    def __init__(self, nodes):
-        self.ip = ip
-        self.port = port
-        self.version = version
+    def __init__(self, nodes, config):
         self.nodes = nodes
-        self.lastId = 0
-        def strategy
-        def run
-        run_simple(self.ip, self.port, self.application)
+        self.strategy = config['strategy']
+        self.coding = coding['strategies'][strategy]['coding']
+        self.replicas = coding['strategies'][strategy]['coding']
+        self.losses = coding['strategies'][strategy]['coding']
 
     @abstractmethod
     def execute(self):
