@@ -1,0 +1,28 @@
+{
+  'version': 0.0.1,
+  'api_port': 5000,
+  'api_host': 172.24.1.1,
+  'rpc_port': 5001,
+  'rpc_host': 192.24.1.1,
+  'strategies': [
+    {
+      'coding': false,
+      'replicas': 3,
+      'losses': 0,
+      'desc': 'Master -> slaves'
+    },
+    {
+      'coding': false,
+      'replicas': 3,
+      'losses': 0,
+      'desc': 'Slave -> Slave'
+    },
+    {
+      'coding': true,
+      'replicas': 0,
+      'losses': 1,
+      'desc': 'Master -> slaves'
+    }
+  ],
+  'strategy': 1
+}
