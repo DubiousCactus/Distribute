@@ -38,7 +38,7 @@ class ClientNode:
         return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 
     def remote_call(self, payload):
-        url = "http://{}:{}".format(self.leadIP, self.leadReqestPort)
+        url = "http://{}:{}".format(self.leadIP, self.leadPort)
         headers = {'content-type': 'application/json'}
         return requests.post(url, data=json.dumps(payload), headers=headers).json()
 
@@ -47,11 +47,11 @@ class ClientNode:
             "registerNode",
             {
                 "ip": self.get_ip(),
-                "mac": hex(self.get_mac()),
+                "mac": hex(get_mac()),
                 "code": self._version
             }
         )
-        response = remote_call(payload)
+        response = self.remote_call(payload)
 
     #SERVER PART START
     @dispatcher.add_method

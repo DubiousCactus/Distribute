@@ -36,7 +36,7 @@ function deploy_to {
 	fi
 	echo "[*] Restarting target process ..."
 	sshpass -p "$password" ssh "$username"@"$1" "pkill nohup -9"
-	sshpass -p "$password" ssh "$username"@"$1" "nohup python3 ~/slave/client_node.py"
+	sshpass -p "$password" ssh "$username"@"$1" "cd ~/slave/ && nohup python3 ~/slave/client_node.py"
 }
 
 if [[ $# -lt 1 ]]; then
