@@ -25,7 +25,7 @@ class Node:
         self.storage_units = nb_units
 
     def write(self, filename, bytes):
-        payload = make_payload("write_file","filename":filename,"bytes":bytes})
+        payload = make_payload("write_file", {"filename": filename, "bytes": bytes})
         response = remote_call(payload)
 
     def read(self, fileName):
