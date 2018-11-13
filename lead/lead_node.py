@@ -13,18 +13,19 @@ app = Flask(__name__)
 
 class LeadNode:
     def __init__(self, config):
-        self.api_host = config['api_host']
-        self.rpc_host = config['rpc_host']
-        self.api_port = config['api_port']
-        self.rpc_port = config['rpc_port']
         self._version = config['version']
         self.nodes = []
-        self.rest = rest_api(self.nodes,self.api_host,self.api_port)
-        self.rpc = rest_api(self.nodes,self.rpc_host,self.rpc_port,self.version)
+        self.rest = rest_api(self, config['api_host'],  config['api_port'])
+        self.rpc = rest_api(self, config['rpc_host'], config['rpc_port'])
 
     def start(self):
         self.rest.start()
         self.rpc.start()
+
+    def updateCodeOnSlave(self, ip):
+        # TODO: Maybe sanitize the ip first ?
+        call(['deploy.sh', ip])
+
 
 
 if __name__ == '__main__':
