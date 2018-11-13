@@ -1,30 +1,27 @@
 #! /usr/bin/python3
 
 import json
-import requests
 import netifaces as ni
 
+from lead import LeadNode
+from rpc_server import Server
 from uuid import getnode as get_mac
-from werkzeug.serving import run_simple
-from werkzeug.wrappers import Request, Response
-from jsonrpc import JSONRPCResponseManager, dispatcher
 
 class ClientNode:
 
     def __init__(self, config):
-        self.leadIP = config['lead_ip']
-        self.leadPort = config['lead_port']
+        self.leadNode = LeadNode(config['lead_ip'], config['lead_port'])
         self.port = config['port']
+        self.server = None
         self._version = config['version']
-        self.register()
 
     def start(self):
-        # Starts the communication service as a server
-        run_simple(get_ip(), self.leadPort, application)
+        self.server = Server(self, self.get_ip(), self.port)
+        self.register()
 
     def read_file(self, filepath):
-        file = open(filepath, "rb").read()
-        return file
+        with open(filepath, "rb") as file:
+            return file.read() # TODO: Serialize before return
 
     def make_payload(self, method, params):
         return {
@@ -37,11 +34,6 @@ class ClientNode:
     def get_ip(self):
         return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 
-    def remote_call(self, payload):
-        url = "http://{}:{}".format(self.leadIP, self.leadPort)
-        headers = {'content-type': 'application/json'}
-        return requests.post(url, data=json.dumps(payload), headers=headers).json()
-
     def register(self):
         payload = self.make_payload(
             "registerNode",
@@ -51,34 +43,8 @@ class ClientNode:
                 "code": self._version
             }
         )
-        response = self.remote_call(payload)
+        response = self.leadNode.call(payload)
 
-    #SERVER PART START
-    @dispatcher.add_method
-    def write_file(**kwargs):
-        TO = os.getcwd()+"\\"+kwargs["filename"]
-        file = open(TO, "ab")
-        file.write(kwargs["bytes"])
-        file.close()
-        # IF TRUE AND X > 0 ASK FOR RANDOM NODE REPLICACE TO THAT
-        # ELSE RETURN
-        return "success"
-
-    @dispatcher.add_method
-    def read_file(**kwargs):
-        return read_file(kwargs["filename"])
-
-    @dispatcher.add_method
-    def delete_file(**kwargs):
-        os.remove(kwargs["filename"])
-        return "success"
-
-    @Request.application
-    def application(request):
-        response = JSONRPCResponseManager.handle(request.data, dispatcher)
-        print(request.data)
-        return Response(response.json,mimetype='application/json')
-    #SERVER PART END
 
 
 if __name__ == "__main__":
