@@ -5,7 +5,6 @@ import requests
 import netifaces as ni
 
 from uuid import getnode as get_mac
-from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
