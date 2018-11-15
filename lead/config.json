@@ -4,25 +4,25 @@
   "api_host": "172.24.1.1",
   "rpc_port": 5001,
   "rpc_host": "164.24.1.1",
-  "strategies": [
-    {
-      "coding": false,
-      "replicas": 3,
-      "losses": 0,
+  "strategies": {
+    "master_to_slave_replica": {
+      "nb_replicas": 3,
+      "losses": 3,
       "desc": "Master -> slaves"
     },
-    {
-      "coding": false,
-      "replicas": 3,
-      "losses": 0,
+    "slave_to_slave_replica": {
+      "nb_replicas": 3,
+      "losses": 2,
       "desc": "Slave -> Slave"
     },
-    {
-      "coding": true,
-      "replicas": 0,
+    "master_to_slave_coded": {
       "losses": 1,
       "desc": "Master -> slaves"
+    },
+    "slave_to_slave_coded": {
+      "losses": 2,
+      "desc": "Slave -> slave"
     }
-  ],
-  "strategy": 1
+  },
+  "strategy": "master_to_slave_replica"
 }

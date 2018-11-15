@@ -3,22 +3,23 @@
 import os
 import json
 import errno
+import strategies
 
 from node import Node
 from rpc_api import RPC
 from rest_api import REST
-from strategy import Strategy
 
 from subprocess import call
 
 
 class LeadNode:
     def __init__(self, config):
+        self.config = config
         self._version = config['version']
         self.nodes = {}
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
-        self.strategy = Strategy(config)
+        self.set_strategy(config['strategy'])
 
     def start(self):
         self.rest.start()
@@ -33,10 +34,13 @@ class LeadNode:
         call(['deploy.sh', ip])
 
     def store(self, file):
-        pass
+        self.strategy.store_file(file)
 
     def set_strategy(self, choice):
-        self.strategy = Strategy(config, choice)
+        self.strategy = strategies.get(
+            choice,
+            **self.config['strategies'][choice]
+        )
 
 
 if __name__ == '__main__':
