@@ -2,5 +2,6 @@
   "version": "0.0.1",
   "lead_ip": "164.24.1.1",
   "lead_port": 5001,
-  "port": 5000
+  "port": 5000,
+  "storage_units": 1
 }

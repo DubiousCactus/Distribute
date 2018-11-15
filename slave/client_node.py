@@ -7,6 +7,7 @@ from lead import LeadNode
 from rpc_server import Server
 from uuid import getnode as get_mac
 
+
 class ClientNode:
 
     def __init__(self, config):
@@ -14,6 +15,7 @@ class ClientNode:
         self.port = config['port']
         self.server = None
         self._version = config['version']
+        self.storage_units = config['storage_units']
 
     def start(self):
         self.server = Server(self, self.get_ip(), self.port)
@@ -40,7 +42,9 @@ class ClientNode:
             {
                 "ip": self.get_ip(),
                 "mac": hex(get_mac()),
-                "code": self._version
+                "version": self._version,
+                "port": self.port,
+                "units": self.storage_units
             }
         )
         response = self.leadNode.call(payload)
