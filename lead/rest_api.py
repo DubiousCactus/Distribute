@@ -4,34 +4,35 @@ import errno
 
 from node import Node
 from subprocess import call
-from flask import Flask, render_template, request
+from werkzeug import secure_filename
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-class RestApi:
+class REST:
 
-    def __init__(self, nodes, ip, port):
+    def __init__(self, controller, ip, port):
+        self.controller = controller
         self.ip = ip
         self.port = port
 
     @app.route('/')
     def showpage():
-       return render_template('upload.html')
+        return render_template('upload.html')
 
     @app.route('/storage', methods = ['GET','POST'])
     def upload_file():
-       if request.method == 'POST':
-          f = request.files['file']
-          f.save(secure_filename(f.filename))
-          # (TESTING REPLICAITON)
-          # IF TRUE SEND TO RANDOM NODE 
-          # ELSE SEND TO X NODES
-          return { "code": 200, "msg": 'File uploaded successfully.' }
-
-       if request.method == 'GET':
-           # GET THE FILE FROM A NODE
-             return 'returned '+ request.args["filename"]+' successfully'
-             #return 'returning '+ fileEntered +' successfully'
+        if request.method == 'POST':
+            self.controller.store(
+                secure_filename(request.files['file'].filename)
+            )
+            response = jsonify({"msg": 'File uploaded successfully.'})
+            response.status_code = 200
+            return response
+        elif request.method == 'GET':
+            response = jsonify({'msg': 'Not implemented'})
+            response.status_code = 404
+            return response
 
     def start(self):
         app.run(debug=True, host=self.ip, port=self.port)

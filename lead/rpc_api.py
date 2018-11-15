@@ -6,26 +6,33 @@ from node import Node
 from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
+from jsonrpc import JSONRPCResponseManager, dispatcher
 
-#This class opens a connection for nodes to register on using RPC
-class RpcApi:
+'''
+This class opens a connection for nodes to register on using RPC
+'''
+
+class RPC:
 
     def __init__(self, controller, ip, port):
+        self.controller = controller
         self.ip = ip
         self.port = port
 
     @dispatcher.add_method
     def registerNode(self, **kwargs):
+        print('[!] New connection established with ' + ip)
+
         ip = kwargs["ip"]
         mac = kwargs["mac"]
-        print('New connection established with ' + ip)
-        #The Node Requesting for registration, has a invalid version of the code, an update will be forced on to it.
+        port = kwwargs["port"]
+        units = kwargs["units"]
+
         if(kwargs["version"] > self.controller._version):
-            self.controller.updateSlave(ip)
+            self.controller.updateNode(ip)
             return { "code": 200, "msg": "Updating slave..." }
-        #The Node Requesting for registration, has the newest version of API and can therefore be added to the directory
         else:
-            self.controller.addNode(ip, mac)
+            self.controller.addNode(ip, mac, port, units)
             return { "code": 200, "msg": "Success." }
 
     @Request.application
