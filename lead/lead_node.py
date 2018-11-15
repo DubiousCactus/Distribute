@@ -4,10 +4,13 @@ import os
 import json
 import errno
 
-from rest_api import REST
-from rpc_api import RPC
 from node import Node
+from rpc_api import RPC
+from rest_api import REST
+from strategy import Strategy
+
 from subprocess import call
+
 
 class LeadNode:
     def __init__(self, config):
@@ -15,6 +18,7 @@ class LeadNode:
         self.nodes = {}
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
+        self.strategy = Strategy(config)
 
     def start(self):
         self.rest.start()
@@ -30,6 +34,9 @@ class LeadNode:
 
     def store(self, file):
         pass
+
+    def set_strategy(self, choice):
+        self.strategy = Strategy(config, choice)
 
 
 if __name__ == '__main__':

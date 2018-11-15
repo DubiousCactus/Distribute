@@ -20,7 +20,7 @@ class REST:
     def showpage():
         return render_template('upload.html')
 
-    @app.route('/storage', methods = ['GET','POST'])
+    @app.route('/storage', methods=['GET','POST'])
     def upload_file():
         if request.method == 'POST':
             self.controller.store(
@@ -33,6 +33,10 @@ class REST:
             response = jsonify({'msg': 'Not implemented'})
             response.status_code = 404
             return response
+
+    @app.route('/strategy/{choice}', methods=['POST'])
+    def set_strategy():
+        self.controller.set_strategy(request.choice)
 
     def start(self):
         app.run(debug=True, host=self.ip, port=self.port)
