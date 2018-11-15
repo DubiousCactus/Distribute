@@ -21,15 +21,15 @@ class Server:
 
     def __init__(self, controller, ip, port):
         self.controller = controller
-        run_simple(ip, port, application)
+        run_simple(ip, port, self.application)
 
     @dispatcher.add_method
     def write_file(**kwargs):
         with open("~/storage/{}".format(kwargs['filename']), 'wb') as file:
             file.write(kwargs["bytes"])
-            return "success"
+            return {"code": 200, "msg": "Success"}
 
-        return "failure"
+        return {"code": 401, "msg": "Failure"}
 
     @dispatcher.add_method
     def read_file(**kwargs):
@@ -38,11 +38,11 @@ class Server:
     @dispatcher.add_method
     def delete_file(**kwargs):
         os.remove(kwargs["filename"])
-        return "success"
+        return {"code": 200, "msg": "Success"}
 
     @Request.application
-    def application(request):
+    def application(self, request):
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         print(request.data)
-        return Response(response.json,mimetype='application/json')
+        return Response(response.json, mimetype='application/json')
 

@@ -10,9 +10,7 @@
 Lead node client class
 """
 
-from werkzeug.serving import run_simple
-from werkzeug.wrappers import Request, Response
-from jsonrpc import JSONRPCResponseManager, dispatcher
+import requests
 
 
 class LeadNode:
@@ -22,8 +20,9 @@ class LeadNode:
         self.port = port
 
     def call(self, payload):
-        url = "http://{}:{}".format(self.leadIP, self.leadPort)
+        url = "http://{}:{}".format(self.ip, self.port)
         headers = {'content-type': 'application/json'}
+
         return requests.post(url, data=json.dumps(payload), headers=headers).json()
 
 

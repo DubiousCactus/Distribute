@@ -32,7 +32,8 @@ class ClientNode:
         }
 
     def get_ip(self):
-        return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+        # return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+        return "1"
 
     def register(self):
         payload = self.make_payload(
@@ -44,6 +45,7 @@ class ClientNode:
             }
         )
         response = self.leadNode.call(payload)
+        # TODO: Check response
 
 
 
