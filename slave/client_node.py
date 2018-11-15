@@ -32,8 +32,7 @@ class ClientNode:
         }
 
     def get_ip(self):
-        # return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
-        return "1"
+        return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 
     def register(self):
         payload = self.make_payload(
