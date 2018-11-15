@@ -20,7 +20,7 @@ class RPC:
         self.port = port
 
     @dispatcher.add_method
-    def registerNode(self, **kwargs):
+    def register_node(self, **kwargs):
         print('[!] New connection established with ' + ip)
 
         ip = kwargs["ip"]
@@ -29,10 +29,10 @@ class RPC:
         units = kwargs["units"]
 
         if(kwargs["version"] > self.controller._version):
-            self.controller.updateNode(ip)
+            self.controller.update_node(ip)
             return { "code": 200, "msg": "Updating slave..." }
         else:
-            self.controller.addNode(ip, mac, port, units)
+            self.controller.add_node(ip, mac, port, units)
             return { "code": 200, "msg": "Success." }
 
     @Request.application

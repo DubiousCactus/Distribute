@@ -38,7 +38,7 @@ class ClientNode:
 
     def register(self):
         payload = self.make_payload(
-            "registerNode",
+            "register_node",
             {
                 "ip": self.get_ip(),
                 "mac": hex(get_mac()),

@@ -24,11 +24,11 @@ class LeadNode:
         self.rest.start()
         self.rpc.start()
 
-    def addNode(self, ip, mac, port, units):
+    def add_node(self, ip, mac, port, units):
         # Will replace
         self.nodes[mac] = Node(mac, ip, port)
 
-    def updateNode(self, ip):
+    def update_node(self, ip):
         # TODO: Maybe sanitize the ip first ?
         call(['deploy.sh', ip])
 

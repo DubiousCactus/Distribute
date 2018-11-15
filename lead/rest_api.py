@@ -17,7 +17,7 @@ class REST:
         self.port = port
 
     @app.route('/')
-    def showpage():
+    def show_page():
         return render_template('upload.html')
 
     @app.route('/storage', methods=['GET','POST'])
