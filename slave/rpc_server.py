@@ -10,8 +10,6 @@
 RPC Server used to receive instructions from the lead node
 """
 
-import os
-
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
@@ -23,26 +21,54 @@ class Server:
         self.controller = controller
         run_simple(ip, port, self.application)
 
+
+    def success():
+        return {"code": 200, "msg": "Success"}
+
+
+    def failure():
+        return {"code": 401, "msg": "Failure"}
+
+
     @dispatcher.add_method
     def write_file(**kwargs):
-        with open("~/storage/{}".format(kwargs['filename']), 'wb') as file:
-            file.write(kwargs["bytes"])
-            return {"code": 200, "msg": "Success"}
+        if self.controller.write(kwargs["name"], kwargs["content"]):
+            return success()
+        else:
+            return failure()
 
-        return {"code": 401, "msg": "Failure"}
+
+    @dispatcher.add_method
+    def write_file_repeat(**kwargs):
+        if self.controller.write(kwargs["name"], kwargs["content"]):
+            if kwargs["ttl"] > 0:
+                if self.controller.pick_and_repeat(
+                        kwargs["name"],
+                        kwargs["content"],
+                        kwargs["ttl"]
+                    ):
+                    return success()
+                else:
+                    return failure()
+        else:
+            return failure()
+
 
     @dispatcher.add_method
     def read_file(**kwargs):
-        return self.controller.read_file(kwargs["filename"])
+        return self.controller.read_file(kwargs["name"])
+
 
     @dispatcher.add_method
     def delete_file(**kwargs):
-        os.remove(kwargs["filename"])
-        return {"code": 200, "msg": "Success"}
+        if self.controller.delete(kwargs["name"]):
+            return success()
+        else:
+            return failure()
+
 
     @Request.application
     def application(self, request):
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
-        print(request.data)
         return Response(response.json, mimetype='application/json')
 

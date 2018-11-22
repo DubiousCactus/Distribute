@@ -3,8 +3,10 @@
 import json
 import netifaces as ni
 
+from node import Node
 from lead import LeadNode
 from rpc_server import Server
+
 from uuid import getnode as get_mac
 
 
@@ -16,14 +18,33 @@ class ClientNode:
         self.server = None
         self._version = config['version']
         self.storage_units = config['storage_units']
+        self.neighbours = []
+
 
     def start(self):
         self.server = Server(self, self.get_ip(), self.port)
         self.register()
 
+
     def read_file(self, filepath):
         with open(filepath, "rb") as file:
             return file.read() # TODO: Serialize before return
+
+
+    def write_file(self, name, content):
+        with open(name, "wb") as file:
+            file.write(content)
+            return True
+
+        return False
+
+
+    def pick_and_repeat(self, name, content, ttl):
+        for node in self.neighbours:
+            # TODO: Criteria
+            node.write_repeat(name, content, ttl)
+            break # Escape for loop
+
 
     def make_payload(self, method, params):
         return {
@@ -33,8 +54,10 @@ class ClientNode:
             "id": 0,
         }
 
+
     def get_ip(self):
         return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+
 
     def register(self):
         payload = self.make_payload(
