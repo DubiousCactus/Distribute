@@ -7,22 +7,25 @@
 # Distributed under terms of the MIT license.
 
 """
-Master to slave with coding
+Strategy base class
 """
 
-from . import Strategy
+from abc import ABCMeta, abstractmethod
 
 
-class Master_to_slave_coded(Strategy):
-    def __init__(self, desc, losses):
-        Strategy.__init__(self, desc)
-        self.losses = losses
+class Strategy(object):
+    def __init__(self, controller, description=None):
+        self.description = description
+        self.controller = controller
 
+    @abstractmethod
     def store_file(self, file_bytes, file_name):
         pass
 
+    @abstractmethod
     def retreive_file(self, file_name):
         pass
 
+    @abstractmethod
     def get_time(self):
         pass

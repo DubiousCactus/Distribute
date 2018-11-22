@@ -13,7 +13,7 @@ Slave to slave with replication
 from . import Strategy
 
 class Slave_to_slave_replica(Strategy):
-    def __init__(self, desc, nb_replicas, losses):
+    def __init__(self, controller, desc, nb_replicas, losses):
         Strategy.__init__(self, desc)
         self.nb_replicas = nb_replicas
         self.losses = losses
