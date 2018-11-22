@@ -14,7 +14,7 @@ from . import Strategy
 
 
 class Master_to_slave_coded(Strategy):
-    def __init__(self, desc, losses):
+    def __init__(self, controller, desc, losses):
         Strategy.__init__(self, desc)
         self.losses = losses
 

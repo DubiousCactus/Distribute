@@ -14,8 +14,9 @@ from abc import ABCMeta, abstractmethod
 
 
 class Strategy(object):
-    def __init__(self, description=None):
+    def __init__(self, controller, description=None):
         self.description = description
+        self.controller = controller
 
     @abstractmethod
     def store_file(self, file_bytes, file_name):
