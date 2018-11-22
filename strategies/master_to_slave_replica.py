@@ -11,19 +11,29 @@ Master to slave using replication
 """
 
 from . import Strategy
-
+from lead_node import lead
+from random import shuffle
 
 class Master_to_slave_replica(Strategy):
     def __init__(self, controller, desc, nb_replicas, losses):
-        Strategy.__init__(self, desc)
+        Strategy.__init__(self, lead(controller), desc)
         self.nb_replicas = nb_replicas
         self.losses = losses
 
     def store_file(self, file_bytes, file_name):
-        pass
+        nodes = shuffle(self.controller.nodes)
+        for node in nodes:
+            response = node.read_file(file_name)
+            if response:
+               return response
+        return
 
     def retreive_file(self, file_name):
-        pass
+        for node in self.controller.nodes:
+            response = node.read_file(file_name)
+            if response:
+               return response
+        return
 
     def get_time(self):
         pass

@@ -27,15 +27,19 @@ class Node:
 
     def write(self, filename, bytes):
         payload = make_payload("write_file", {"file_name": filename, "bytes": bytes})
-        response = remote_call(payload)
+        return response = remote_call(payload)
+
+    def write_repeat(self, filename, bytes, iterations):
+        payload = make_payload("write_file_repeat", {"file_name": filename, "bytes": bytes, "ttl":iterations})
+        return response = remote_call(payload)
 
     def read(self, fileName):
         payload = make_payload("read_file", {"file_name": fileName})
-        response = remote_call(payload)
+        return response = remote_call(payload)
 
     def delete(self, fileName):
         payload = make_payload("delete_file", {"file_name": fileName})
-        response = remote_call(payload)
+        return response = remote_call(payload)
 
     def __make_payload(method,params):
         return {
