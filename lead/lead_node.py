@@ -21,20 +21,28 @@ class LeadNode:
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
         self.set_strategy(config['strategy'])
 
+
     def start(self):
         self.rest.start()
         self.rpc.start()
 
+
     def add_node(self, ip, mac, port, units):
+        for mac, node in self.nodes:
+            node.propagate(mac, ip, port, units)
+
         # Will replace
-        self.nodes[mac] = Node(mac, ip, port)
+        self.nodes[mac] = Node(mac, ip, port, units)
+
 
     def update_node(self, ip):
         # TODO: Maybe sanitize the ip first ?
         call(['deploy.sh', ip])
 
+
     def store(self, file):
         self.strategy.store_file(file)
+
 
     def set_strategy(self, choice):
         self.strategy = strategies.get(

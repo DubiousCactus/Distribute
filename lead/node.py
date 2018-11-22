@@ -20,26 +20,46 @@ class Node:
         self.mac = mac
         self.ip = ip
         self.storage_units = units
-        self.port = prot
+        self.port = port
+
 
     def set_storage_units(self, nb_units):
         self.storage_units = nb_units
+
 
     def write(self, filename, bytes):
         payload = make_payload("write_file", {"file_name": filename, "bytes": bytes})
         return response = remote_call(payload)
 
+
     def write_repeat(self, filename, bytes, iterations):
         payload = make_payload("write_file_repeat", {"file_name": filename, "bytes": bytes, "ttl":iterations})
         return response = remote_call(payload)
+
 
     def read(self, fileName):
         payload = make_payload("read_file", {"file_name": fileName})
         return response = remote_call(payload)
 
+
     def delete(self, fileName):
         payload = make_payload("delete_file", {"file_name": fileName})
         return response = remote_call(payload)
+
+
+    # Propagate a node registration to the other nodes
+    def propagate(self, mac, ip, port, units):
+        payload = self.__make_payload(
+            "add_neighbour",
+            {
+                "mac": mac,
+                "ip": ip,
+                "port": port,
+                "units": units
+            }
+        )
+        return self.__remote_call(payload)
+
 
     def __make_payload(method,params):
         return {
@@ -48,6 +68,7 @@ class Node:
             "jsonrpc": "2.0",
             "id": 0,
         }
+
 
     def __remote_call(payload):
         url = "http://{}:{}".format(self.ip, self.port)

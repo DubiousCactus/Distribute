@@ -3,6 +3,7 @@ import json
 import errno
 
 from node import Node
+
 from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
@@ -18,6 +19,7 @@ class RPC:
         self.controller = controller
         self.ip = ip
         self.port = port
+
 
     @dispatcher.add_method
     def register_node(self, **kwargs):
@@ -35,10 +37,12 @@ class RPC:
             self.controller.add_node(ip, mac, port, units)
             return { "code": 200, "msg": "Success." }
 
+
     @Request.application
     def application(self, request):
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         return Response(response.json, mimetype='application/json')
+
 
     def start(self):
         run_simple(self.ip, self.port, self.application)

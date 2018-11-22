@@ -67,6 +67,15 @@ class Server:
             return failure()
 
 
+    @dispatchwer.add_method
+    def add_neighbour(**kwargs):
+        if self.controller.add_neighbour(
+            kwargs["mac"], kwargs["ip"], kwargs["port"], kwargs["units"]
+        ):
+            return success()
+        else:
+            return failure()
+
     @Request.application
     def application(self, request):
         response = JSONRPCResponseManager.handle(request.data, dispatcher)

@@ -18,12 +18,16 @@ class ClientNode:
         self.server = None
         self._version = config['version']
         self.storage_units = config['storage_units']
-        self.neighbours = []
+        self.neighbours = {}
 
 
     def start(self):
         self.server = Server(self, self.get_ip(), self.port)
         self.register()
+
+
+    def add_neighbour(self, mac, ip, port, units):
+        self.neighbours[mac] = Node(ip, port, units)
 
 
     def read_file(self, filepath):
@@ -40,7 +44,7 @@ class ClientNode:
 
 
     def pick_and_repeat(self, name, content, ttl):
-        for node in self.neighbours:
+        for mac, node in self.neighbours:
             # TODO: Criteria
             node.write_repeat(name, content, ttl)
             break # Escape for loop
