@@ -45,14 +45,22 @@ class REST:
         return jsonify({"msg": "File not present in request"})
 
 
-    @app.route('/storage/{file_name}', methods=['GET'])
+    @app.route('/storage/', methods=['GET'])
     def download_file():
-        file = controller.retrieve(
-            secure_filename(request.filen_name)
-        )
-        response = jsonify({"content": file})
-        response.status_code = 200
-        return response
+        if 'file_name' in request.args:
+            file = controller.retrieve(
+                secure_filename(request.args.get('file_name'))
+            )
+            if file:
+                response = jsonify({"content": file})
+                response.status_code = 200
+                return response
+            else:
+                response = jsonify({"msg": "File couldn't be found."})
+                response.status_code = 500
+                return response
+        return jsonify({"msg": "File name not present in request"})
+
 
 
     @app.route('/strategy/{choice}', methods=['POST'])
