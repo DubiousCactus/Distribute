@@ -43,8 +43,8 @@ class LeadNode:
         call(['deploy.sh', ip])
 
 
-    def store(self, file):
-        self.strategy.store_file(file)
+    def store(self, filename, file):
+        return self.strategy.store_file(file, filename)
 
 
     def retrieve(self, file_name):
