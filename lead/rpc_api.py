@@ -38,7 +38,7 @@ class RPC:
             return { "code": 200, "msg": "Success." }
 
 
-    @Request.add_method
+    @dispatcher.add_method
     def register_location(self, **kwargs):
         file_name = kwargs["file_name"]
         location = kwargs["location"] # Node mac

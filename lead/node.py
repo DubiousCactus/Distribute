@@ -29,22 +29,22 @@ class Node:
 
     def write(self, filename, bytes):
         payload = make_payload("write_file", {"file_name": filename, "bytes": bytes})
-        return response = remote_call(payload)
+        return self.__remote_call(payload)
 
 
     def write_repeat(self, filename, bytes, iterations):
         payload = make_payload("write_file_repeat", {"file_name": filename, "bytes": bytes, "ttl":iterations})
-        return response = remote_call(payload)
+        return self.__remote_call(payload)
 
 
     def read(self, fileName):
         payload = make_payload("read_file", {"file_name": fileName})
-        return response = remote_call(payload)
+        return self.__remote_call(payload)
 
 
     def delete(self, fileName):
         payload = make_payload("delete_file", {"file_name": fileName})
-        return response = remote_call(payload)
+        return self.__remote_call(payload)
 
 
     # Propagate a node registration to the other nodes

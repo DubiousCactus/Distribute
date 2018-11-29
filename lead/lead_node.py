@@ -59,6 +59,7 @@ class LeadNode:
     def set_strategy(self, choice):
         self.strategy = strategies.get(
             choice,
+            self,
             **self.config['strategies'][choice]
         )
 
