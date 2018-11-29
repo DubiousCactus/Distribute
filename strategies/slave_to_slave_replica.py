@@ -25,8 +25,8 @@ class Slave_to_slave_replica(Strategy):
         replications = self.description["nb_replicas"]
         return node.write_file_repeat(file_name, replications)
 
-    def retreive_file(self, file_name):
-        for node in self.controller.nodes:
+    def retrieve_file(self, file_name, locations):
+        for node in locations:
             response = node.read_file(file_name)
             if response:
                return response

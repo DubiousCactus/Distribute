@@ -38,6 +38,15 @@ class RPC:
             return { "code": 200, "msg": "Success." }
 
 
+    @Request.add_method
+    def register_location(self, **kwargs):
+        file_name = kwargs["file_name"]
+        location = kwargs["location"] # Node mac
+        print("[*] Adding {} to registry for file '{}'".format(location,
+                                                               file_name))
+        self.controller.add_to_ledger(file_name, location)
+
+
     @Request.application
     def application(self, request):
         response = JSONRPCResponseManager.handle(request.data, dispatcher)

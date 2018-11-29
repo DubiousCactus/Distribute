@@ -11,6 +11,8 @@ from rest_api import REST
 
 from subprocess import call
 
+from tinydb import TinyDB, Query
+
 
 class LeadNode:
     def __init__(self, config):
@@ -20,6 +22,7 @@ class LeadNode:
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
         self.set_strategy(config['strategy'])
+        self.db = TinyDB('ledger.json')
 
 
     def start(self):
@@ -44,11 +47,24 @@ class LeadNode:
         self.strategy.store_file(file)
 
 
+    def retrieve(self, file_name):
+        locations = [] # List of Nodes
+        for result in self.db.search({'file_name': file_name}):
+            locations.append(
+                self.nodes[result['location']]
+            )
+        return self.strategy.retrieve_file(file_name, locations)
+
+
     def set_strategy(self, choice):
         self.strategy = strategies.get(
             choice,
             **self.config['strategies'][choice]
         )
+
+
+    def add_to_ledger(self, file_name, location):
+        self.db.insert({'file_name': file_name, 'location': location})
 
 
 if __name__ == '__main__':

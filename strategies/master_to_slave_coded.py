@@ -27,8 +27,8 @@ class Master_to_slave_coded(Strategy):
                return response
         return
 
-    def retreive_file(self, file_name):
-        for node in self.controller.nodes:
+    def retrieve_file(self, file_name, locations):
+        for node in locations:
             response = node.read_file(file_name)
             if response:
                return response

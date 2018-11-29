@@ -26,8 +26,8 @@ class Slave_to_slave_coded(Strategy):
         encrypted_data = encypt_with_kodo()
         return node.write_file_repeat(file_name, encrypted_data, replications)
 
-    def retreive_file(self, file_name):
-        for node in self.controller.nodes:
+    def retrieve_file(self, file_name, locations):
+        for node in locations:
             response = node.read_file(file_name)
             if response:
                return decypt_with_kodo(response)
@@ -38,6 +38,6 @@ class Slave_to_slave_coded(Strategy):
 
     def decypt_with_kodo(self, file_bytes):
         pass
-        
+
     def get_time(self):
         pass

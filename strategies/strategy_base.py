@@ -23,7 +23,7 @@ class Strategy(object):
         pass
 
     @abstractmethod
-    def retreive_file(self, file_name):
+    def retrieve_file(self, file_name, locations):
         pass
 
     @abstractmethod
