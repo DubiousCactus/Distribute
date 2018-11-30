@@ -3,15 +3,19 @@
       <h3>Upload file</h3>
       <form action = "http://{{ rest_host }}:{{ rest_port }}/storage" method = "POST" enctype = "multipart/form-data">
          <input type = "file" name = "file" />
-         <input type = "submit"/>
+         <button type="submit">Upload</button>
       </form>
       <br><br>
       <hr>
       <h3>Download file</h3>
       <form id="getform"  action = "http://{{ rest_host }}:{{ rest_port }}/storage" method = "GET" enctype = "multipart/form-data">
-         Enter filename:<br>
-         <input type="text" name="file_name"> 
-      <input id="clickMe" type="submit" />
+         <p>Select the file you want to download from the list:</p>
+         <select name="file_name">
+         {% for entry in entries %}
+             <option value="{{ entry }}">{{ entry }}</option>
+         {% endfor %}
+         </select>
+         <button type="submit">Download</button>
       </form> 
    </body>
 </html>

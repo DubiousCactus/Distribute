@@ -49,7 +49,6 @@ class LeadNode:
 
     def retrieve(self, file_name):
         locations = [] # List of Nodes
-        self.nodes = { 1: "test", 2: "test", 3: "test", 4: "test"}
         for result in self.db.search(Query().file_name == file_name):
             locations.append(
                 self.nodes[result['location']]
@@ -67,6 +66,14 @@ class LeadNode:
 
     def add_to_ledger(self, file_name, location):
         self.db.insert({'file_name': file_name, 'location': location})
+
+
+    def get_ledger_entries(self):
+        return map(
+            lambda entry: entry['file_name'],
+            self.db.search(Query().file_name.exists())
+        )
+
 
 
 if __name__ == '__main__':

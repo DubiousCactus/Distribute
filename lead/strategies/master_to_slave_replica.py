@@ -46,4 +46,5 @@ class Master_to_slave_replica(Strategy):
 
 
     def get_time(self):
+        # TODO
         pass

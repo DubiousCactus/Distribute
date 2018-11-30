@@ -24,7 +24,8 @@ class REST:
 
     @app.route('/')
     def show_page():
-        return render_template('upload.html', rest_host = ip, rest_port = port)
+        return render_template('upload.html', rest_host=ip, rest_port=port,
+                               entries=controller.get_ledger_entries())
 
 
     @app.route('/storage', methods=['POST'])
