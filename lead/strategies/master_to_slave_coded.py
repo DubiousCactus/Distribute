@@ -10,8 +10,11 @@
 Master to slave with coding
 """
 
+import kodo
+
 from . import Strategy
 from random import shuffle
+
 
 class Master_to_slave_coded(Strategy):
     def __init__(self, controller, desc, losses):

@@ -13,6 +13,7 @@ Master to slave using replication
 from . import Strategy
 from random import shuffle
 
+
 class Master_to_slave_replica(Strategy):
     def __init__(self, controller, desc, nb_replicas, losses):
         Strategy.__init__(self, controller, desc)
