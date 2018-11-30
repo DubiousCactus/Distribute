@@ -1,1 +1,5 @@
-This folder contains the RPC for the slave nodes, these contains the server for the nodes to rechive data from the client (found in the Lead folder from root) and the RPC client connection to register themself, to the lead node
+This folder contains the project running on each storage node. The Python3
+project is composed of:
+
+- A main application handling requests from the lead node
+- An RPC server for reading and writing files
