@@ -69,10 +69,10 @@ class LeadNode:
 
 
     def get_ledger_entries(self):
-        return map(
+        return list(set(map(
             lambda entry: entry['file_name'],
             self.db.search(Query().file_name.exists())
-        )
+        )))
 
 
 
