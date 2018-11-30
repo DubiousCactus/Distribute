@@ -49,6 +49,7 @@ class LeadNode:
 
     def retrieve(self, file_name):
         locations = [] # List of Nodes
+        self.nodes = { 1: "test", 2: "test", 3: "test", 4: "test"}
         for result in self.db.search(Query().file_name == file_name):
             locations.append(
                 self.nodes[result['location']]

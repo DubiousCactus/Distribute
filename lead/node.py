@@ -33,7 +33,10 @@ class Node:
 
 
     def write_repeat(self, filename, bytes, iterations):
-        payload = make_payload("write_file_repeat", {"file_name": filename, "bytes": bytes, "ttl":iterations})
+        payload = make_payload(
+            "write_file_repeat",
+            {"file_name": filename, "bytes": bytes, "ttl":iterations}
+        )
         return self.__remote_call(payload)
 
 
