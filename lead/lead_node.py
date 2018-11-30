@@ -48,11 +48,10 @@ class LeadNode:
 
 
     def retrieve(self, file_name):
-        locations = [] # List of Nodes
-        for result in self.db.search(Query().file_name == file_name):
-            locations.append(
-                self.nodes[result['location']]
-            )
+        locations = map(
+            lambda entry: entry['location'],
+            self.db.search(Query().file_name == file_name)
+        )
         return self.strategy.retrieve_file(file_name, locations)
 
 
