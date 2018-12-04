@@ -26,11 +26,13 @@ class LeadNode:
 
 
     def start(self):
-        self.rest.start()
         self.rpc.start()
+        self.deploy_all()
+        self.rest.start()
 
 
     def add_node(self, ip, mac, port, units):
+        print("[?] Adding node {}".format(mac))
         for mac, node in self.nodes:
             node.propagate(mac, ip, port, units)
 
@@ -38,9 +40,13 @@ class LeadNode:
         self.nodes[mac] = Node(mac, ip, port, units)
 
 
+    def deploy_all(self):
+        call([os.getcwd() + '/deploy.sh'])
+
+
     def update_node(self, ip):
         # TODO: Maybe sanitize the ip first ?
-        call(['deploy.sh', ip])
+        call([os.getcwd() + '/deploy.sh', ip])
 
 
     def store(self, filename, file):

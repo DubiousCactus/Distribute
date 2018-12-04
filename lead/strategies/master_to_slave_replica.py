@@ -22,7 +22,10 @@ class Master_to_slave_replica(Strategy):
 
 
     def store_file(self, file_bytes, file_name):
+        print(self.controller._version)
+        print(self.controller.nodes)
         nodes = shuffle(self.controller.nodes)
+        print(nodes)
         if not nodes: return False
         for n in range(self.nb_replicas):
             for node in nodes:

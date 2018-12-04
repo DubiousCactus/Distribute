@@ -1,12 +1,12 @@
 {
-  "version": "0.0.1",
+  "version": "0.5",
   "api_port": 5000,
   "api_host": "172.24.1.1",
   "rpc_port": 5001,
   "rpc_host": "164.24.1.1",
   "strategies": {
     "master_to_slave_replica": {
-      "nb_replicas": 3,
+      "nb_replicas": 4,
       "losses": 3,
       "desc": "Master -> slaves"
     },

@@ -1,6 +1,7 @@
 import os
 import json
 import errno
+import threading
 
 from node import Node
 
@@ -13,9 +14,10 @@ from jsonrpc import JSONRPCResponseManager, dispatcher
 This class opens a connection for nodes to register on using RPC
 '''
 
-class RPC:
+class RPC(threading.Thread):
 
     def __init__(self, controller, ip, port):
+        threading.Thread.__init__(self)
         self.controller = controller
         self.ip = ip
         self.port = port
@@ -27,7 +29,7 @@ class RPC:
 
         ip = kwargs["ip"]
         mac = kwargs["mac"]
-        port = kwwargs["port"]
+        port = kwargs["port"]
         units = kwargs["units"]
 
         if(kwargs["version"] > self.controller._version):
@@ -53,5 +55,5 @@ class RPC:
         return Response(response.json, mimetype='application/json')
 
 
-    def start(self):
+    def run(self):
         run_simple(self.ip, self.port, self.application)

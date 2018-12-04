@@ -13,7 +13,7 @@ ip = None
 port = None
 
 
-class REST:
+class REST():
 
     def __init__(self, ctrl, host, p):
         global controller, ip, port
