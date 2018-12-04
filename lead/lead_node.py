@@ -32,11 +32,14 @@ class LeadNode:
 
 
     def add_node(self, ip, mac, port, units):
-        for mac, node in self.nodes.items():
+        print("[!] Adding node {}".format(mac))
+        for key, node in self.nodes.items():
             node.propagate(mac, ip, port, units)
 
         # Will replace
+        print(self.nodes)
         self.nodes[mac] = Node(mac, ip, port, units)
+        print(self.nodes)
 
 
     def deploy_all(self):
@@ -49,6 +52,8 @@ class LeadNode:
 
 
     def store(self, filename, file):
+        print("Calling strategy.store_file with nodes:")
+        print(self.nodes)
         return self.strategy.store_file(file, filename)
 
 
