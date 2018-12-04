@@ -19,6 +19,8 @@ class LeadNode:
         self.config = config
         self._version = config['version']
         self.nodes = {}
+        # TODO: Fix this bug where the given self reference isn't the same in
+        # REST and RPC
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
         self.set_strategy(config['strategy'])
@@ -32,14 +34,12 @@ class LeadNode:
 
 
     def add_node(self, ip, mac, port, units):
-        print("[!] Adding node {}".format(mac))
+        print("self={}".format(self))
         for key, node in self.nodes.items():
             node.propagate(mac, ip, port, units)
 
         # Will replace
-        print(self.nodes)
         self.nodes[mac] = Node(mac, ip, port, units)
-        print(self.nodes)
 
 
     def deploy_all(self):
@@ -52,8 +52,7 @@ class LeadNode:
 
 
     def store(self, filename, file):
-        print("Calling strategy.store_file with nodes:")
-        print(self.nodes)
+        print("self={}".format(self))
         return self.strategy.store_file(file, filename)
 
 
