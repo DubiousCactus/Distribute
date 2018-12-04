@@ -67,7 +67,7 @@ class Server:
             return failure()
 
 
-    @dispatchwer.add_method
+    @dispatcher.add_method
     def add_neighbour(**kwargs):
         if self.controller.add_neighbour(
             kwargs["mac"], kwargs["ip"], kwargs["port"], kwargs["units"]
