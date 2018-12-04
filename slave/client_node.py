@@ -19,10 +19,11 @@ class ClientNode:
         self._version = config['version']
         self.storage_units = config['storage_units']
         self.neighbours = {}
+        self.server = Server(self, self.get_ip(), self.port)
 
 
     def start(self):
-        self.server = Server(self, self.get_ip(), self.port)
+        self.server.start()
         self.register()
 
 

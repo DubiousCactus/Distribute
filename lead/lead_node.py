@@ -27,13 +27,12 @@ class LeadNode:
 
     def start(self):
         self.rpc.start()
-        self.deploy_all()
         self.rest.start()
+        self.deploy_all()
 
 
     def add_node(self, ip, mac, port, units):
-        print("[?] Adding node {}".format(mac))
-        for mac, node in self.nodes:
+        for mac, node in self.nodes.items():
             node.propagate(mac, ip, port, units)
 
         # Will replace

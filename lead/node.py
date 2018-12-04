@@ -64,7 +64,7 @@ class Node:
         return self.__remote_call(payload)
 
 
-    def __make_payload(method,params):
+    def __make_payload(self, method, params):
         return {
             "method": method,
             "params": params,
@@ -73,7 +73,7 @@ class Node:
         }
 
 
-    def __remote_call(payload):
+    def __remote_call(self, payload):
         url = "http://{}:{}".format(self.ip, self.port)
         headers = {'content-type': 'application/json'}
         return requests.post(url, data=json.dumps(payload), headers=headers).json()

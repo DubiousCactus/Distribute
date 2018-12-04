@@ -14,39 +14,44 @@ from jsonrpc import JSONRPCResponseManager, dispatcher
 This class opens a connection for nodes to register on using RPC
 '''
 
+controller = None
+ip = None
+port = None
+
 class RPC(threading.Thread):
 
-    def __init__(self, controller, ip, port):
+    def __init__(self, this_controller, this_ip, this_port):
         threading.Thread.__init__(self)
-        self.controller = controller
-        self.ip = ip
-        self.port = port
+        global controller, ip, port
+        controller = this_controller
+        ip = this_ip
+        port = this_port
 
 
     @dispatcher.add_method
-    def register_node(self, **kwargs):
-        print('[!] New connection established with ' + ip)
-
+    def register_node(**kwargs):
         ip = kwargs["ip"]
         mac = kwargs["mac"]
         port = kwargs["port"]
         units = kwargs["units"]
 
-        if(kwargs["version"] > self.controller._version):
-            self.controller.update_node(ip)
+        print("[!] New connection established with Node of MAC={} and IP={}".format(mac, ip))
+
+        if(kwargs["version"] > controller._version):
+            controller.update_node(ip)
             return { "code": 200, "msg": "Updating slave..." }
         else:
-            self.controller.add_node(ip, mac, port, units)
+            controller.add_node(ip, mac, port, units)
             return { "code": 200, "msg": "Success." }
 
 
     @dispatcher.add_method
-    def register_location(self, **kwargs):
+    def register_location(**kwargs):
         file_name = kwargs["file_name"]
         location = kwargs["location"] # Node mac
         print("[*] Adding {} to registry for file '{}'".format(location,
                                                                file_name))
-        self.controller.add_to_ledger(file_name, location)
+        controller.add_to_ledger(file_name, location)
 
 
     @Request.application
@@ -56,4 +61,4 @@ class RPC(threading.Thread):
 
 
     def run(self):
-        run_simple(self.ip, self.port, self.application)
+        run_simple(ip, port, self.application)

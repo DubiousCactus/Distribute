@@ -10,16 +10,24 @@
 RPC Server used to receive instructions from the lead node
 """
 
+import threading
+
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
 
 
-class Server:
+class Server(threading.Thread):
 
     def __init__(self, controller, ip, port):
+        threading.Thread.__init__(self)
+        self.ip = ip
+        self.port = port
         self.controller = controller
-        run_simple(ip, port, self.application)
+
+
+    def run(self):
+        run_simple(self.ip, self.port, self.application)
 
 
     def success():

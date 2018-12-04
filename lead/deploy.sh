@@ -16,7 +16,8 @@ username="pi"
 password="raspberry"
 
 restart_process=1 # Whether to restart the process on the target machine, after uploading the code
-process_name="nohup python3 ~/slave/client_node.py" # Name of the process to restart (with arguments)
+process_to_kill="nohup"
+process_name="cd ~/slave/ && nohup python3 client_node.py" # Name of the process to restart (with arguments)
 folder=~/slave/ # Absolute path to the code folder to upload to the target machine(s)
 
 
@@ -56,8 +57,7 @@ function deploy_to {
 	fi
 	if [[ $restart_process -eq 1 ]]; then
 		echo "[*] Restarting target process ..."
-		process=$(echo $process_name | cut -d' ' -f1)
-		sshpass -p "$password" ssh "$username"@"$1" "pkill $process -9" &>/dev/null || RETURN_CODE=$? && true;
+		sshpass -p "$password" ssh "$username"@"$1" "pkill $process_to_kill -9" &>/dev/null || RETURN_CODE=$? && true;
 		sshpass -p "$password" ssh "$username"@"$1" "$process_name" &>/dev/null || RETURN_CODE=$? && true;
 	fi
 }
