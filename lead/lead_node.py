@@ -19,8 +19,6 @@ class LeadNode:
         self.config = config
         self._version = config['version']
         self.nodes = {}
-        # TODO: Fix this bug where the given self reference isn't the same in
-        # REST and RPC
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
         self.set_strategy(config['strategy'])
