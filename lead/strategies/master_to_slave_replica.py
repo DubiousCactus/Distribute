@@ -17,11 +17,14 @@ from random import shuffle
 class Master_to_slave_replica(Strategy):
     def __init__(self, controller, desc, nb_replicas, losses):
         Strategy.__init__(self, controller, desc)
+        self.__controller = controller
         self.nb_replicas = nb_replicas
         self.losses = losses
 
 
     def store_file(self, file_bytes, file_name):
+        print("From strategy:")
+        print(self.__controller.nodes)
         nodes = shuffle(self.controller.nodes)
         if not nodes: return False
         for n in range(self.nb_replicas):

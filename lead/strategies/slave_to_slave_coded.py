@@ -18,6 +18,7 @@ from kodoDecoder import KodoDecoder
 class Slave_to_slave_coded(Strategy):
     def __init__(self, controller, desc, losses):
         Strategy.__init__(self, controller, desc)
+        self.controller = controller
         self.losses = losses
 
     def store_file(self, file_bytes, file_name):

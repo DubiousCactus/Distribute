@@ -17,6 +17,7 @@ from random import shuffle
 class Slave_to_slave_replica(Strategy):
     def __init__(self, controller, desc, nb_replicas, losses):
         Strategy.__init__(self, controller, desc)
+        self.controller = controller
         self.nb_replicas = nb_replicas
         self.losses = losses
 

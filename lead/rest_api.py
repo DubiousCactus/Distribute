@@ -22,7 +22,7 @@ class REST():
         port = p
 
 
-    @app.route('/')
+    @app.route('/', methods=['GET'])
     def show_page():
         return render_template('upload.html', rest_host=ip, rest_port=port,
                                entries=controller.get_ledger_entries())
