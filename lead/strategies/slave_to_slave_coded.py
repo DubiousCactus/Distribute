@@ -12,7 +12,8 @@ Slave to slave with coding
 
 from . import Strategy
 from random import shuffle
-
+from kodoEncoder import KodoEncoder
+from kodoDecoder import KodoDecoder
 
 class Slave_to_slave_coded(Strategy):
     def __init__(self, controller, desc, losses):
@@ -33,9 +34,13 @@ class Slave_to_slave_coded(Strategy):
         return
 
     def encypt_with_kodo(self, file_bytes):
+        kodoEncoder.init_encoder(8,160)
+        kodoEncoder.encode(file_bytes)
         pass
 
     def decypt_with_kodo(self, file_bytes):
+        kodoDecoder.init_decoder(8,160)
+        kodoDecoder.decode(file_bytes)
         pass
 
     def get_time(self):
