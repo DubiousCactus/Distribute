@@ -56,12 +56,13 @@ function deploy_to {
 		echo "[*] Ok!"
 		if [[ $restart_process -eq 1 ]]; then
 			echo "[*] Restarting target process ..."
-			sshpass -p "$password" ssh "$username"@"$1" "pkill $process_to_kill -9" &>/dev/null || RETURN_CODE=$? && true;
-			sshpass -p "$password" ssh "$username"@"$1" "$process_name" &>/dev/null || RETURN_CODE=$? && true;
+			sshpass -p "$password" ssh "$username"@"$1" "pkill $process_to_kill -9" &>/dev/null || KILL_RETURN_CODE=$? && true;
+			sshpass -p "$password" ssh "$username"@"$1" "$process_name" &>/dev/null || RUN_RETURN_CODE=$? && true;
 		fi
 	fi
 	unset EXIT_CODE
-	unset RETURN_CODE
+	unset KILL_RETURN_CODE
+	unset RUN_RETURN_CODE
 }
 
 

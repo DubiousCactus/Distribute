@@ -32,7 +32,6 @@ class LeadNode:
 
 
     def add_node(self, ip, mac, port, units):
-        print("self={}".format(self))
         for key, node in self.nodes.items():
             node.propagate(mac, ip, port, units)
 
@@ -50,7 +49,6 @@ class LeadNode:
 
 
     def store(self, filename, file):
-        print("self={}".format(self))
         return self.strategy.store_file(file, filename)
 
 
