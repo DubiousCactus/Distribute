@@ -8,7 +8,7 @@ from node import Node
 from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
-from jsonrpc import JSONRPCResponseManager, dispatcher
+from jsonrpc import JSONRPCResponseManager, Dispatcher
 
 '''
 This class opens a connection for nodes to register on using RPC
@@ -55,8 +55,8 @@ class RPC(threading.Thread):
     @Request.application
     def application(self, request):
         dispatcher = Dispatcher()
-        dispatcher.add_method(register_node)
-        dispatcher.add_method(register_location)
+        dispatcher.add_method(RPC.register_node)
+        dispatcher.add_method(RPC.register_location)
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         return Response(response.json, mimetype='application/json')
 
