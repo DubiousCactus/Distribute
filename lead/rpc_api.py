@@ -28,7 +28,6 @@ class RPC(threading.Thread):
         port = this_port
 
 
-    @dispatcher.add_method
     def register_node(**kwargs):
         ip = kwargs["ip"]
         mac = kwargs["mac"]
@@ -45,7 +44,6 @@ class RPC(threading.Thread):
             return { "code": 200, "msg": "Success." }
 
 
-    @dispatcher.add_method
     def register_location(**kwargs):
         file_name = kwargs["file_name"]
         location = kwargs["location"] # Node mac
@@ -56,6 +54,9 @@ class RPC(threading.Thread):
 
     @Request.application
     def application(self, request):
+        dispatcher = Dispatcher()
+        dispatcher.add_method(register_node)
+        dispatcher.add_method(register_location)
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         return Response(response.json, mimetype='application/json')
 
