@@ -5,10 +5,11 @@ import threading
 
 from node import Node
 
-from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
-from jsonrpc import JSONRPCResponseManager, Dispatcher
+from jsonrpc import JSONRPCResponseManager, dispatcher
+from subprocess import call
+from tinydb import TinyDB, Query
 
 '''
 This class opens a connection for nodes to register on using RPC
@@ -17,46 +18,51 @@ This class opens a connection for nodes to register on using RPC
 controller = None
 ip = None
 port = None
+db = None
+query = None
 
 class RPC(threading.Thread):
 
     def __init__(self, this_controller, this_ip, this_port):
         threading.Thread.__init__(self)
-        global controller, ip, port
+        global controller, ip, port, db
         controller = this_controller
         ip = this_ip
         port = this_port
+        db = TinyDB("nodes.json")
 
-
+    @dispatcher.add_method
     def register_node(**kwargs):
         ip = kwargs["ip"]
         mac = kwargs["mac"]
         port = kwargs["port"]
         units = kwargs["units"]
-
         print("[!] New connection established with Node of MAC={} and IP={}".format(mac, ip))
-
         if(kwargs["version"] > controller._version):
-            controller.update_node(ip)
+            print('Updating node code')
+            call([os.getcwd() + '/deploy.sh', ip])
             return { "code": 200, "msg": "Updating slave..." }
         else:
-            controller.add_node(ip, mac, port, units)
+            if(db.search(Query().mac == mac)):
+                print('Updating node in db')
+                db.update({'mac': mac, 'ip': ip, 'port': port, 'units': units}, Query().mac == mac)
+            else:
+                print('Adding node to db')
+                db.insert({'mac': mac, 'ip': ip, 'port': port, 'units': units})
+            print("Node registered successfully")
             return { "code": 200, "msg": "Success." }
 
-
+    @dispatcher.add_method
     def register_location(**kwargs):
+        print('Register Location')
         file_name = kwargs["file_name"]
-        location = kwargs["location"] # Node mac
+        location = kwargs["location"]  # Node mac
         print("[*] Adding {} to registry for file '{}'".format(location,
                                                                file_name))
         controller.add_to_ledger(file_name, location)
 
-
     @Request.application
     def application(self, request):
-        dispatcher = Dispatcher()
-        dispatcher.add_method(RPC.register_node)
-        dispatcher.add_method(RPC.register_location)
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         return Response(response.json, mimetype='application/json')
 

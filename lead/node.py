@@ -12,7 +12,7 @@ Node class for the LeadNode project. Defines a Node/Slave as a object, and is en
 
 import requests
 import json
-
+import base64
 
 class Node:
 
@@ -28,12 +28,13 @@ class Node:
 
 
     def write(self, filename, bytes):
-        payload = make_payload("write_file", {"file_name": filename, "bytes": bytes})
+        print("write file to node on ip:{} port:{}".format(self.ip,self.port))
+        payload = self.__make_payload("write_file", {"name": filename, "content": bytes.encode('hex')})
         return self.__remote_call(payload)
 
 
     def write_repeat(self, filename, bytes, iterations):
-        payload = make_payload(
+        payload = self.__make_payload(
             "write_file_repeat",
             {"file_name": filename, "bytes": bytes, "ttl":iterations}
         )
@@ -41,12 +42,12 @@ class Node:
 
 
     def read(self, fileName):
-        payload = make_payload("read_file", {"file_name": fileName})
+        payload = self.__make_payload("read_file", {"file_name": fileName})
         return self.__remote_call(payload)
 
 
     def delete(self, fileName):
-        payload = make_payload("delete_file", {"file_name": fileName})
+        payload = self.__make_payload("delete_file", {"file_name": fileName})
         return self.__remote_call(payload)
 
 

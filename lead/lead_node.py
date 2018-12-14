@@ -5,9 +5,11 @@ import json
 import errno
 import strategies
 
-from node import Node
 from rpc_api import RPC
 from rest_api import REST
+from node import Node
+from strategies.kodo_encoder import KodoEncoder
+from strategies.kodo_decoder import KodoDecoder
 
 from subprocess import call
 
@@ -18,25 +20,16 @@ class LeadNode:
     def __init__(self, config):
         self.config = config
         self._version = config['version']
-        self.nodes = {}
+        self.set_strategy(config['strategy'])
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
-        self.set_strategy(config['strategy'])
         self.db = TinyDB('ledger.json')
-
+        #self.nodes = TinyDB('nodes.json')
 
     def start(self):
         self.rpc.start()
         self.rest.start()
         self.deploy_all()
-
-
-    def add_node(self, ip, mac, port, units):
-        for key, node in self.nodes.items():
-            node.propagate(mac, ip, port, units)
-
-        # Will replace
-        self.nodes[mac] = Node(mac, ip, port, units)
 
 
     def deploy_all(self):
@@ -49,6 +42,12 @@ class LeadNode:
 
 
     def store(self, filename, file):
+        #print('hello')
+        #print(self.get_ledger_entries())
+        #with open("nodes") as f:
+        #    for line in f:
+        #        split = line.split(":")
+        #        self.nodes[split[0]] = Node(split[0],split[1],split[2],split[3])
         return self.strategy.store_file(file, filename)
 
 
@@ -77,6 +76,12 @@ class LeadNode:
             lambda entry: entry['file_name'],
             self.db.search(Query().file_name.exists())
         )))
+
+    #def get_nodes_entries(self):
+    #    return list(set(map(
+    #        lambda entry: entry['mac'],
+    #        self.nodes.search(Query().mac.exists())
+    #    )))
 
 
 

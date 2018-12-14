@@ -21,6 +21,7 @@ class LeadNode:
         self.port = port
 
     def call(self, payload):
+        print("Send Registration to lead on {}:{}".format(self.ip, self.port))
         url = "http://{}:{}".format(self.ip, self.port)
         headers = {'content-type': 'application/json'}
 

@@ -17,6 +17,10 @@ from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
 
 
+controller = None
+ip = None
+port = None
+
 class Server(threading.Thread):
 
     def __init__(self, controller, ip, port):
@@ -40,6 +44,12 @@ class Server(threading.Thread):
 
     @dispatcher.add_method
     def write_file(**kwargs):
+        print("writing file")
+        print(kwargs["name"])
+        print(kwargs["content"])
+        file = open(kwargs["name"], "w")
+        file.write(kwargs["content"].decode('hex'))
+        file.close()
         if self.controller.write(kwargs["name"], kwargs["content"]):
             return success()
         else:

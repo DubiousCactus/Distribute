@@ -15,7 +15,6 @@ class ClientNode:
     def __init__(self, config):
         self.leadNode = LeadNode(config['lead_ip'], config['lead_port'])
         self.port = config['port']
-        self.server = None
         self._version = config['version']
         self.storage_units = config['storage_units']
         self.neighbours = {}
@@ -61,7 +60,8 @@ class ClientNode:
 
 
     def get_ip(self):
-        return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+        return "localhost"
+        #return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 
 
     def register(self):

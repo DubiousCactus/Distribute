@@ -22,18 +22,21 @@ class REST():
         port = p
 
 
-    @app.route('/', methods=['GET'])
-    def show_page():
-        return render_template('upload.html', rest_host=ip, rest_port=port,
-                               entries=controller.get_ledger_entries())
+    #@app.route('/', methods=['GET'])
+    #def show_page():
+    #    return render_template('upload.html', rest_host=ip, rest_port=port,
+    #                           entries=controller.get_ledger_entries())
 
+    @app.route('/')
+    def showpage():
+        return render_template('upload.html', rest_host=ip, rest_port=port, entries=controller.get_ledger_entries())
 
     @app.route('/storage', methods=['POST'])
     def upload_file():
         if 'file' in request.files:
             success = controller.store(
                 secure_filename(request.files['file'].filename),
-                request.files['file']
+                request.files['file'].stream.read()
             )
             if success:
                 response = jsonify({"msg": 'File uploaded successfully.'})
@@ -48,6 +51,9 @@ class REST():
 
     @app.route('/storage/', methods=['GET'])
     def download_file():
+
+
+
         if 'file_name' in request.args:
             file = controller.retrieve(
                 secure_filename(request.args.get('file_name'))

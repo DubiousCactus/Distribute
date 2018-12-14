@@ -4,17 +4,23 @@ import kodo
 
 class KodoEncoder():
 
-    def init_encoder(symbols, symbol_size):
+    def __init__(self):
+        self.field = None
+        self.factory = None
+        self.encoder = None
+        self.data = None
+
+    def init_encoder(self, symbols, symbol_size):
         if self.encoder is None:
-            field = kodo.field.binary8
-            encoder_factory = kodo.RLNCEncoderFactory(field, symbols, symbol_size)
-            self.encoder = encoder_factory.build()  
+            self.field = kodo.field.binary8
+            self.factory = kodo.RLNCEncoderFactory(self.field, symbols, symbol_size)
+            self.encoder = self.factory.build()
         return self.encoder
         
-    def encode(bytes):
-        #self.encoder = init_decoder(symbols,symbol_size)
+    def encode(self, bytes):
         self.encoder.set_const_symbols(bytes)
         packets = []
-        while not self.encoder.is_complete():
-            packets.append(self.encoder.write_payload())
+        print("executing encoder")
+        packets.append(self.encoder.write_payload())
+        print(packets)
         return packets

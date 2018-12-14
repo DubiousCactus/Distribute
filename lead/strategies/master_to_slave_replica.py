@@ -12,27 +12,32 @@ Master to slave using replication
 
 from . import Strategy
 from random import shuffle
-
+from node import Node
 
 class Master_to_slave_replica(Strategy):
-    def __init__(self, controller, desc, nb_replicas, losses):
-        Strategy.__init__(self, controller, desc)
-        self.__controller = controller
+    def __init__(self, this_controller, desc, nb_replicas, losses):
+        Strategy.__init__(self, this_controller, desc)
         self.nb_replicas = nb_replicas
         self.losses = losses
+        self.controller = this_controller
+        self.nodes = []
 
 
     def store_file(self, file_bytes, file_name):
+        self.nodes = Strategy(Master_to_slave_replica,self).getNodes()
         print("From strategy:")
-        print(self.__controller.nodes)
-        nodes = shuffle(self._controller.nodes)
-        if not nodes: return False
+        shuffle(self.nodes)
+        print("replications {}".format(self.nb_replicas))
+        print("number of nodes: {}".format(len(self.nodes)))
+        if not self.nodes:
+            return False
         for n in range(self.nb_replicas):
-            for node in nodes:
-                response = node.write(file_name)
+            for node in self.nodes:
+                print(file_name)
+                response = node.write(file_name,file_bytes)
                 if response and response['code'] == 200:
-                    self._controller.add_to_ledger(file_name, node)
-                    nodes.remove(node) # No more than once per node
+                    self.controller.add_to_ledger(file_name, node)
+                    self.nodes.remove(node) # No more than once per node
                 else:
                     # If a node can't be written to, it should be considered fatal
                     return False
