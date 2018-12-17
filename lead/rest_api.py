@@ -5,12 +5,15 @@ import errno
 from node import Node
 from subprocess import call
 from werkzeug import secure_filename
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file, redirect
+import io
 
 app = Flask(__name__)
 controller = None
 ip = None
 port = None
+
+
 
 
 class REST():
@@ -29,7 +32,7 @@ class REST():
 
     @app.route('/')
     def showpage():
-        return render_template('upload.html', rest_host=ip, rest_port=port, entries=controller.get_ledger_entries())
+        return render_template('upload.html', rest_host=ip, rest_port=port, entries=controller.get_ledger_entries(), strategies=controller.getstrategies(), upload_status="", curr_strategy=controller.getcurrentStrategy())
 
     @app.route('/storage', methods=['POST'])
     def upload_file():
@@ -41,27 +44,27 @@ class REST():
             if success:
                 response = jsonify({"msg": 'File uploaded successfully.'})
                 response.status_code = 200
-                return response
+                return render_template('upload.html', rest_host=ip, rest_port=port, entries=controller.get_ledger_entries(), strategies=controller.getstrategies(), upload_status="{} Successfully uploaded".format(request.files['file'].filename), curr_strategy=controller.getcurrentStrategy())
             else:
                 response = jsonify({"msg": "File couldn't be written to nodes."})
                 response.status_code = 500
-                return response
+                return render_template('upload.html', rest_host=ip, rest_port=port, entries=controller.get_ledger_entries(), strategies=controller.getstrategies(), upload_status="Failed", curr_strategy=controller.getcurrentStrategy())
         return jsonify({"msg": "File not present in request"})
 
 
     @app.route('/storage/', methods=['GET'])
     def download_file():
-
-
-
         if 'file_name' in request.args:
             file = controller.retrieve(
                 secure_filename(request.args.get('file_name'))
             )
             if file:
-                response = jsonify({"content": file})
-                response.status_code = 200
-                return response
+                mem = io.BytesIO()
+                mem.write(file["result"].decode('hex'))
+                mem.seek(0)
+                return send_file(mem,
+                                 attachment_filename=request.args.get('file_name'),
+                                 as_attachment=True)
             else:
                 response = jsonify({"msg": "File couldn't be found."})
                 response.status_code = 500
@@ -69,11 +72,14 @@ class REST():
         return jsonify({"msg": "File name not present in request"})
 
 
-
-    @app.route('/strategy/{choice}', methods=['POST'])
+    @app.route('/strategy', methods=['GET'])
     def set_strategy():
-        controller.set_strategy(request.choice)
-
+        if 'strategy_name' in request.args:
+            #CHANGE LEDGER
+            print("attname {}".format(request.args.get('attname')))
+            controller.set_strategy(request.args.get('strategy_name'), request.args.get('attname'))
+            return render_template('upload.html', rest_host = ip, rest_port = port, entries = controller.get_ledger_entries(),
+                                   strategies = controller.getstrategies(), upload_status = "", curr_strategy = controller.getcurrentStrategy())
 
     def start(self):
         app.run(debug=True, host=ip, port=port)

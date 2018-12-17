@@ -12,6 +12,7 @@ Node class for the LeadNode project. Defines a Node/Slave as a object, and is en
 import requests
 import json
 
+
 class Node:
 
     def __init__(self, mac, ip, port=5000, units=1):
@@ -26,52 +27,41 @@ class Node:
 
 
     def write(self, filename, bytes):
-        print("write file to node on ip:{} port:{}".format(self.ip,self.port))
-        payload = self.__make_payload("write_file", {"name": filename, "content": bytes.encode('hex')})
+        payload = self.make_payload("write_file", {"file_name": filename, "bytes": bytes})
         return self.__remote_call(payload)
 
-    def write_kodo_repeat(self, filename, bytes, loses, nodes):
-        print("write file to node on ip:{} port:{}".format(self.ip,self.port))
-        payload = self.__make_payload("write_files_kodo_repeat", {"name": filename, "content": bytes.encode('hex'), "loses":loses, "nodes":self.jsonityNodes(nodes), "coded":False,"index":0})
-        return self.__remote_call(payload)
-
-
-    def jsonityNodes(self, nodes):
-        jsonnodes = None
-        for node in nodes:
-            if jsonnodes is not None:
-                jsonnodes = jsonnodes + ","
-            else:
-                jsonnodes = ""
-            temp = r'"mac":"{}","ip":"{}","port":{},"units":{}'.format(node.mac,node.ip,node.port,node.storage_units)
-            jsonnodes = jsonnodes + '{' + temp + '}'
-        return "["+jsonnodes+"]"
 
     def write_repeat(self, filename, bytes, iterations, nodes):
         payload = self.__make_payload(
             "write_file_repeat",
-            {"name": filename, "content": bytes.encode('hex'), "nodes":self.jsonityNodes(nodes), "ttl":iterations}
+            {"name": filename, "content": bytes.encode('hex'), "nodes":nodes, "ttl":iterations}
         )
         return self.__remote_call(payload)
 
-#    def write_files_kodo_repeat(self, filename, bytes, kodo_content, iterations, nodes):
-#        payload = self.__make_payload(
-#            "write_files_kodo_repeat",
-#            {"name": filename, "content": bytes.encode('hex'), "nodes":self.jsonityNodes(nodes), "ttl":iterations, "kodo_content":kodo_content}
-#        )
-#        return self.__remote_call(payload)
 
-    def read(self, fileName):
-        payload = self.__make_payload("read_file", {"name": fileName})
+    def jsonitykodoPacks(self, packs):
+        jsonnodes = None
+        for pack in packs:
+            if jsonnodes is not None:
+                jsonnodes = jsonnodes + ","
+            else:
+                jsonnodes = ""
+            temp = r'"pack":"{}"'.format(pack)
+            jsonnodes = jsonnodes + '{' + temp + '}'
+        return "["+jsonnodes+"]"
+
+    def write_kodo_repeat(self, filename, bytes, loses, nodes, coded, index):
+        payload = self.__make_payload("write_files_kodo_repeat", {"name": filename, "content": self.jsonitykodoPacks(bytes), "loses":loses, "nodes":nodes, "coded":coded,"index":index})
         return self.__remote_call(payload)
 
-    def read_kodo(self, fileName, nodes):
-        payload = self.__make_payload("read_kodo_files", {"name": fileName, "nodes":self.jsonityNodes(nodes)})
+
+    def read(self, fileName):
+        payload = self.make_payload("read_file", {"file_name": fileName})
         return self.__remote_call(payload)
 
 
     def delete(self, fileName):
-        payload = self.__make_payload("delete_file", {"file_name": fileName})
+        payload = self.make_payload("delete_file", {"file_name": fileName})
         return self.__remote_call(payload)
 
 
@@ -89,7 +79,7 @@ class Node:
         return self.__remote_call(payload)
 
 
-    def __make_payload(self, method, params):
+    def __make_payload(self,method,params):
         return {
             "method": method,
             "params": params,
@@ -98,7 +88,8 @@ class Node:
         }
 
 
-    def __remote_call(self, payload):
+    def __remote_call(self,payload):
         url = "http://{}:{}".format(self.ip, self.port)
         headers = {'content-type': 'application/json'}
         return requests.post(url, data=json.dumps(payload), headers=headers).json()
+

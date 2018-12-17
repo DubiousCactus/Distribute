@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 import os
 import json
 import errno
@@ -7,9 +5,10 @@ import strategies
 
 from rpc_api import RPC
 from rest_api import REST
-from node import Node
-from strategies.kodo_encoder import KodoEncoder
-from strategies.kodo_decoder import KodoDecoder
+from strategies.slave_to_slave_coded import Slave_to_slave_coded
+from strategies.slave_to_slave_replica import Slave_to_slave_replica
+from strategies.master_to_slave_coded import Master_to_slave_coded
+from strategies.master_to_slave_replica import Master_to_slave_replica
 
 from subprocess import call
 
@@ -20,11 +19,11 @@ class LeadNode:
     def __init__(self, config):
         self.config = config
         self._version = config['version']
-        self.set_strategy(config['strategy'])
+        self.strategy = None
+        self.set_strategy(config['strategy'],0)
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
         self.db = TinyDB('ledger.json')
-        #self.nodes = TinyDB('nodes.json')
 
     def start(self):
         self.rpc.start()
@@ -42,12 +41,6 @@ class LeadNode:
 
 
     def store(self, filename, file):
-        #print('hello')
-        #print(self.get_ledger_entries())
-        #with open("nodes") as f:
-        #    for line in f:
-        #        split = line.split(":")
-        #        self.nodes[split[0]] = Node(split[0],split[1],split[2],split[3])
         return self.strategy.store_file(file, filename)
 
 
@@ -59,12 +52,29 @@ class LeadNode:
         return self.strategy.retrieve_file(file_name, locations)
 
 
-    def set_strategy(self, choice):
-        self.strategy = strategies.get(
-            choice,
-            self,
-            **self.config['strategies'][choice]
-        )
+    def set_strategy(self, choice, att):
+        if str(choice) == "master_to_slave_replica":
+            self.strategy = Master_to_slave_replica(self,"master_to_slave_replica with {} replications".format(att),att)
+        if str(choice) == "slave_to_slave_replica":
+            self.strategy = Slave_to_slave_replica(self,"slave_to_slave_replica with {} replication".format(att),att)
+        if str(choice) == "master_to_slave_coded":
+            self.strategy = Master_to_slave_coded(self,"master_to_slave_coded with {} loses".format(att),att)
+        if str(choice) == "slave_to_slave_coded":
+            self.strategy = Slave_to_slave_coded(self,"slave_to_slave_coded with {} loses".format(att),att)
+        #        self.strategy = strategies.get(
+#            choice,
+#            self,
+#            **self.config['strategies'][choice]
+#        )
+
+    def getstrategies(self):
+        return list(self.config['strategies'].keys())
+
+
+    def getcurrentStrategy(self):
+        if self.strategy is None:
+            return ""
+        return "{}".format(self.strategy.description)
 
 
     def add_to_ledger(self, file_name, location):
@@ -76,13 +86,6 @@ class LeadNode:
             lambda entry: entry['file_name'],
             self.db.search(Query().file_name.exists())
         )))
-
-    #def get_nodes_entries(self):
-    #    return list(set(map(
-    #        lambda entry: entry['mac'],
-    #        self.nodes.search(Query().mac.exists())
-    #    )))
-
 
 
 if __name__ == '__main__':

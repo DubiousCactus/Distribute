@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
 #
-# Copyright © 2018 theomorales <theomorales@Theos-MacBook-Pro.local>
 #
 # Distributed under terms of the MIT license.
 
@@ -28,25 +27,41 @@ class Node:
 
 
     def write(self, filename, bytes):
-        payload = make_payload("write_file", {"file_name": filename, "bytes": bytes})
+        payload = self.make_payload("write_file", {"file_name": filename, "bytes": bytes})
         return self.__remote_call(payload)
 
 
-    def write_repeat(self, filename, bytes, iterations):
-        payload = make_payload(
+    def write_repeat(self, filename, bytes, iterations, nodes):
+        payload = self.__make_payload(
             "write_file_repeat",
-            {"file_name": filename, "bytes": bytes, "ttl":iterations}
+            {"name": filename, "content": bytes.encode('hex'), "nodes":nodes, "ttl":iterations}
         )
         return self.__remote_call(payload)
 
 
+    def jsonitykodoPacks(self, packs):
+        jsonnodes = None
+        for pack in packs:
+            if jsonnodes is not None:
+                jsonnodes = jsonnodes + ","
+            else:
+                jsonnodes = ""
+            temp = r'"pack":"{}"'.format(pack)
+            jsonnodes = jsonnodes + '{' + temp + '}'
+        return "["+jsonnodes+"]"
+
+    def write_kodo_repeat(self, filename, bytes, loses, nodes, coded, index):
+        payload = self.__make_payload("write_files_kodo_repeat", {"name": filename, "content": self.jsonitykodoPacks(bytes), "loses":loses, "nodes":nodes, "coded":coded,"index":index})
+        return self.__remote_call(payload)
+
+
     def read(self, fileName):
-        payload = make_payload("read_file", {"file_name": fileName})
+        payload = self.make_payload("read_file", {"file_name": fileName})
         return self.__remote_call(payload)
 
 
     def delete(self, fileName):
-        payload = make_payload("delete_file", {"file_name": fileName})
+        payload = self.make_payload("delete_file", {"file_name": fileName})
         return self.__remote_call(payload)
 
 
@@ -64,7 +79,7 @@ class Node:
         return self.__remote_call(payload)
 
 
-    def __make_payload(method,params):
+    def __make_payload(self,method,params):
         return {
             "method": method,
             "params": params,
@@ -73,7 +88,7 @@ class Node:
         }
 
 
-    def __remote_call(payload):
+    def __remote_call(self,payload):
         url = "http://{}:{}".format(self.ip, self.port)
         headers = {'content-type': 'application/json'}
         return requests.post(url, data=json.dumps(payload), headers=headers).json()

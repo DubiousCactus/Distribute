@@ -1,9 +1,11 @@
+<!doctype html>
 <html>
    <body>
       <h3>Upload file</h3>
       <form action = "http://{{ rest_host }}:{{ rest_port }}/storage" method = "POST" enctype = "multipart/form-data">
          <input type = "file" name = "file" />
-         <button type="submit">Upload</button>
+         <button type="submit">Upload</button><br/><br/>
+          <label id="label1">{{upload_status}}</label>
       </form>
       <br><br>
       <hr>
@@ -16,6 +18,25 @@
          {% endfor %}
          </select>
          <button type="submit">Download</button>
-      </form> 
+      </form>
+      <br><br>
+      <hr>
+      <h3>Select Strategy</h3>
+      <form id="getform"  action = "http://{{ rest_host }}:{{ rest_port }}/strategy" method = "GET" enctype = "multipart/form-data">
+         <p>Select the strategy you want to use:</p>
+         <select name="strategy_name">
+         {% for strategy in strategies %}
+             <option value="{{ strategy }}">{{ strategy }}</option>
+         {% endfor %}
+         </select>
+         <p>Select number of replications or loses:</p>
+         <select name="attname">
+         {% for attr in [0,1,2,3,4] %}
+             <option value="{{ attr }}">{{ attr }}</option>
+         {% endfor %}
+         </select>
+         <button type="submit">Select</button><br/><br/>
+          <label id="label">{{curr_strategy}}</label>
+      </form>
    </body>
 </html>

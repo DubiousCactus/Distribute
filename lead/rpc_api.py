@@ -30,6 +30,7 @@ class RPC(threading.Thread):
         ip = this_ip
         port = this_port
         db = TinyDB("nodes.json")
+        db.purge_tables()
 
     @dispatcher.add_method
     def register_node(**kwargs):

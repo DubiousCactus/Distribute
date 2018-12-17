@@ -18,7 +18,7 @@ class ClientNode:
         self._version = config['version']
         self.storage_units = config['storage_units']
         self.neighbours = {}
-        self.server = Server(self, hex(get_mac()), self.get_ip(), self.port)
+        self.server = Server(self, "slave2", self.get_ip(), self.port)
 
 
     def start(self):
@@ -70,7 +70,7 @@ class ClientNode:
                 "register_node",
                 {
                     "ip": self.get_ip(),
-                    "mac": hex(get_mac()),
+                    "mac": "slave2",
                     "version": self._version,
                     "port": self.port,
                     "units": self.storage_units
