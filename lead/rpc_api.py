@@ -5,6 +5,7 @@ import threading
 
 from node import Node
 
+from tinydb import TinyDB, Query
 from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
@@ -14,16 +15,16 @@ from jsonrpc import JSONRPCResponseManager, Dispatcher
 This class opens a connection for nodes to register on using RPC
 '''
 
-controller = None
 ip = None
 port = None
+nodes_db = TinyDB('nodes.json')
+ledger_db = TinyDB('nodes.json')
 
 class RPC(threading.Thread):
 
-    def __init__(self, this_controller, this_ip, this_port):
+    def __init__(self, this_ip, this_port):
         threading.Thread.__init__(self)
-        global controller, ip, port
-        controller = this_controller
+        global ip, port
         ip = this_ip
         port = this_port
 
@@ -36,12 +37,8 @@ class RPC(threading.Thread):
 
         print("[!] New connection established with Node of MAC={} and IP={}".format(mac, ip))
 
-        if(kwargs["version"] > controller._version):
-            controller.update_node(ip)
-            return { "code": 200, "msg": "Updating slave..." }
-        else:
-            controller.add_node(ip, mac, port, units)
-            return { "code": 200, "msg": "Success." }
+        nodes_db.insert({'ip': ip, 'mac': mac, 'port': port, 'units': units})
+        return { "code": 200, "msg": "Success." }
 
 
     def register_location(**kwargs):
@@ -49,7 +46,7 @@ class RPC(threading.Thread):
         location = kwargs["location"] # Node mac
         print("[*] Adding {} to registry for file '{}'".format(location,
                                                                file_name))
-        controller.add_to_ledger(file_name, location)
+        ledger_db.insert({'file_name': file_name, 'location': location})
 
 
     @Request.application
