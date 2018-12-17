@@ -17,8 +17,8 @@ This class opens a connection for nodes to register on using RPC
 
 ip = None
 port = None
-nodes_db = TinyDB('nodes.json')
-ledger_db = TinyDB('nodes.json')
+nodes_db = TinyDB('nodes.json', cache_size=0)
+ledger_db = TinyDB('ledger.json', cache_size=0)
 
 class RPC(threading.Thread):
 

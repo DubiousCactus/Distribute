@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 import os
+import time
 import json
 import errno
 import strategies
@@ -9,8 +10,8 @@ from node import Node
 from rpc_api import RPC
 from rest_api import REST
 
+from threading import Timer
 from subprocess import call
-
 from tinydb import TinyDB, Query
 
 
@@ -22,21 +23,29 @@ class LeadNode:
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
         self.set_strategy(config['strategy'])
-        self.db = TinyDB('ledger.json')
+        # Disable the query cache because we have two instances open!
+        self.nodes_db = TinyDB('nodes.json', cache_size=0)
+        self.ledger_db = TinyDB('ledger.json', cache_size=0)
 
 
     def start(self):
         self.rpc.start()
         self.rest.start()
         self.deploy_all()
+        Timer(2, self.sync_nodes) # Run every 2 seconds
 
 
-    def add_node(self, ip, mac, port, units):
-        for key, node in self.nodes.items():
-            node.propagate(mac, ip, port, units)
+    # This runs in a thread and watches for new DB entries
+    def sync_nodes(self):
+        for node in self.nodes_db.all():
+            if not self.nodes.has_key(node['mac']):
+                for key, node in self.nodes.items():
+                    node.propagate(node['mac'], node['ip'], node['port'], node['units'])
 
-        # Will replace
-        self.nodes[mac] = Node(mac, ip, port, units)
+                # Will replace
+                self.nodes[mac] = Node(mac, ip, port, units)
+
+        Timer(2, self.sync_nodes) # Run every 2 seconds
 
 
     def deploy_all(self):
@@ -55,7 +64,7 @@ class LeadNode:
     def retrieve(self, file_name):
         locations = map(
             lambda entry: entry['location'],
-            self.db.search(Query().file_name == file_name)
+            self.ledger_db.search(Query().file_name == file_name)
         )
         return self.strategy.retrieve_file(file_name, locations)
 
@@ -68,14 +77,10 @@ class LeadNode:
         )
 
 
-    def add_to_ledger(self, file_name, location):
-        self.db.insert({'file_name': file_name, 'location': location})
-
-
     def get_ledger_entries(self):
         return list(set(map(
             lambda entry: entry['file_name'],
-            self.db.search(Query().file_name.exists())
+            self.ledger_db.search(Query().file_name.exists())
         )))
 
 
