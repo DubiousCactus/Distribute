@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 
 import os
+import sys
 import time
 import json
 import errno
@@ -16,16 +17,21 @@ from tinydb import TinyDB, Query
 
 
 class LeadNode:
-    def __init__(self, config):
+    def __init__(self, config, test=False):
+        if test:
+            config['api_host'] = 'localhost'
+            config['rpc_host'] = 'localhost'
+
         self.config = config
         self._version = config['version']
         self.nodes = {}
         self.rest = REST(self, config['api_host'],  config['api_port'])
-        self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
+        self.rpc = RPC(config['rpc_host'], config['rpc_port'])
         self.set_strategy(config['strategy'])
         # Disable the query cache because we have two instances open!
-        self.nodes_db = TinyDB('nodes.json', cache_size=0)
-        self.ledger_db = TinyDB('ledger.json', cache_size=0)
+        db = TinyDB('db.json')
+        self.nodes_db = db.table('nodes', cache_size=0)
+        self.ledger_db = db.table('ledger', cache_size=0)
 
 
     def start(self):
@@ -86,6 +92,7 @@ class LeadNode:
 
 
 if __name__ == '__main__':
+    debug = (sys.argv[1] == '--debug')
     with open('config.json', 'r') as config_file:
-        leadNode = LeadNode(json.load(config_file))
+        leadNode = LeadNode(json.load(config_file), debug)
         leadNode.start()
