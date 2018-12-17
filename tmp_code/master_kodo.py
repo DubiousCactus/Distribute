@@ -57,12 +57,6 @@ class MasterKodo:
         print("Decoder end")
         return data_out
 
-    def set_systematic_mode(self, mode):
-        if (mode):
-            self.encoder.set_systematic_on()
-        else:
-            self.encoder.set_systematic_off()
-
     def lose_encoded_packets(self, encoded_packets, number):
         for i in range(number):
             encoded_packets.pop()
