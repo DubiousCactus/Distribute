@@ -37,7 +37,6 @@ class RPC(threading.Thread):
         units = kwargs["units"]
 
         print("[!] New connection established with Node of MAC={} and IP={}".format(mac, ip))
-
         nodes_db.insert({'ip': ip, 'mac': mac, 'port': port, 'units': units})
         return { "code": 200, "msg": "Success." }
 
