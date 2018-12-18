@@ -92,7 +92,7 @@ class LeadNode:
 
 
 if __name__ == '__main__':
-    debug = (sys.argv[1] == '--debug')
+    debug = (len(sys.argv) > 1 and sys.argv[1] == '--debug')
     with open('config.json', 'r') as config_file:
         leadNode = LeadNode(json.load(config_file), debug)
         leadNode.start()
