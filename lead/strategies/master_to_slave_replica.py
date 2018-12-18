@@ -34,8 +34,9 @@ class Master_to_slave_replica(Strategy):
             for node in nodes:
                 print("Attempting to write to node {} ...".format(node.ip))
                 response = node.write(file_name)
+                print("Response: {}".format(reponse))
                 if response and response['code'] == 200:
-                    self.__controller.add_to_ledger(file_name, node)
+                    # self.__controller.add_to_ledger(file_name, node)
                     nodes.remove(node) # No more than once per node
                 else:
                     # If a node can't be written to, it should be considered fatal
