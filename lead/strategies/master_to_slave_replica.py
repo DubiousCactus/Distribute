@@ -25,13 +25,13 @@ class Master_to_slave_replica(Strategy):
     def store_file(self, file_bytes, file_name):
         print("From strategy:")
         print(self.__controller.nodes)
-        nodes = shuffle(self._controller.nodes)
+        nodes = shuffle(self.__controller.nodes)
         if not nodes: return False
         for n in range(self.nb_replicas):
             for node in nodes:
                 response = node.write(file_name)
                 if response and response['code'] == 200:
-                    self._controller.add_to_ledger(file_name, node)
+                    self.__controller.add_to_ledger(file_name, node)
                     nodes.remove(node) # No more than once per node
                 else:
                     # If a node can't be written to, it should be considered fatal
