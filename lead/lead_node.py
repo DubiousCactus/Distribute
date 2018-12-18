@@ -48,13 +48,14 @@ class LeadNode:
         # db = TinyDB('db.json')
         # self.nodes_db = db.table('nodes', cache_size=0)
         for node in self.nodes_db.all():
-            if not self.nodes.has_key(node['mac']):
+            if node['mac'] not in self.nodes:
                 for key, node in self.nodes.items():
                     node.propagate(node['mac'], node['ip'], node['port'], node['units'])
 
                 # Will replace
-                print("[*] Adding node {} to the list".format(ip))
-                self.nodes[mac] = Node(mac, ip, port, units)
+                print("[*] Adding node {} to the list".format(node['ip']))
+                self.nodes[node['mac']] = Node(node['mac'], node['ip'],
+                                               node['port'], node['units'])
 
         Timer(1, self.sync_nodes).start() # Run every 2 seconds
 
