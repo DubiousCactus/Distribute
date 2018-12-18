@@ -38,12 +38,12 @@ class LeadNode:
         Timer(1, self.sync_nodes).start() # Run every 2 seconds
         self.rpc.start()
         self.rest.start()
-        self.deploy_all()
+        # self.deploy_all()
 
 
     # This runs in a thread and watches for new DB entries
     def sync_nodes(self):
-        print("[*] Syncing nodes...")
+        # print("[*] Syncing nodes...")
         # Force reload the DB cause fuck it we're desperate now
         # db = TinyDB('db.json')
         # self.nodes_db = db.table('nodes', cache_size=0)

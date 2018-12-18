@@ -55,6 +55,7 @@ class RPC(threading.Thread):
         dispatcher.add_method(RPC.register_node)
         dispatcher.add_method(RPC.register_location)
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
+        print("RPC server running... Ready to deploy!")
         return Response(response.json, mimetype='application/json')
 
 
