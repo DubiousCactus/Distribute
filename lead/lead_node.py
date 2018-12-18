@@ -35,10 +35,10 @@ class LeadNode:
 
 
     def start(self):
+        Timer(1, self.sync_nodes).start() # Run every 2 seconds
         self.rpc.start()
         self.rest.start()
         self.deploy_all()
-        Timer(1, self.sync_nodes).start() # Run every 2 seconds
 
 
     # This runs in a thread and watches for new DB entries
