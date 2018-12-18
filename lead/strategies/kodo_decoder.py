@@ -3,23 +3,16 @@ import sys
 import kodo
 
 class KodoDecoder():
-    def __init__(self):
+    def __init__(self, symbols, symbol_size):
+        self.__decoder = kodo.RLNCDecoderFactory(kodo.field.binary8, symbols,
+                                               symbol_size).build()
 
-    def init_decoder(symbols, symbol_size):
-        if self.decoder is None:
-            field = kodo.field.binary8
-            decoder_factory = kodo.RLNCDecoderFactory(field, symbols, symbol_size)
-            self.decoder = decoder_factory.build()    
-        return self.decoder
-
-    def decode(packets):
-        #self.decoder = init_decoder(symbols,symbol_size)
+    def decode(self, packets):
         data_out = bytearray(decoder.block_size())
-        self.decoder.set_mutable_symbols(data_out)
-        packet_number = 0
-        for f in packets:
-            if self.__decoder.is_complete() == true:
+        self.__decoder.set_mutable_symbols(data_out)
+        for packet in packets:
+            self.decoder.read_payload(packet)
+            if self.__decoder.is_complete():
                 break
-            self.decoder.read_payload(packet[packet_number])
-            packet_number += 1
+
         return data_out
