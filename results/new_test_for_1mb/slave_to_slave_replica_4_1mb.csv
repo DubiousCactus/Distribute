@@ -1,0 +1,16 @@
+1542952266600; Adding MAC=0xb827eb35f825L to registry for file '1mb'
+1542952266637; File (0xb827eb35f825L) for MAC=1mb add to register
+1542952267606; Adding MAC=0xb827eb571999L to registry for file '1mb'
+1542952267632; File (0xb827eb571999L) for MAC=1mb add to register
+1542952269537; Adding MAC=0xb827eb204bc5L to registry for file '1mb'
+1542952269567; File (0xb827eb204bc5L) for MAC=1mb add to register
+1542952273327; Adding MAC=0xb827ebe78e48L to registry for file '1mb'
+1542952273361; File (0xb827ebe78e48L) for MAC=1mb add to register
+1542952266051; Enter Strategy: Slave_to_slave_replica with 4 Replication and 0 nodes
+1542952266051; Slave_to_slave_replica: Find and Shuffle nodes
+1542952266060; Slave_to_slave_replica: nodes shuffled
+1542952266060; Slave_to_slave_replica: Sending file (1mb) to 0xb827eb35f825L
+1542952273572; Slave_to_slave_replica: File (1mb) send to 0xb827eb35f825L success
+1542952273572; Finish Strategy: Slave_to_slave_replica with 4 Replication and 4 nodes
+1542952280827; Slave_to_slave_replica Requesting file (1mb)
+1542952281642; Slave_to_slave_replica file (1mb) Rechived
