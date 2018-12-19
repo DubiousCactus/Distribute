@@ -31,12 +31,21 @@
          </select>
          <p>Select number of replications or loses:</p>
          <select name="attname">
-         {% for attr in [0,1,2,3,4] %}
+         {% for attr in [0, 1,2,3,4] %}
              <option value="{{ attr }}">{{ attr }}</option>
          {% endfor %}
          </select>
          <button type="submit">Select</button><br/><br/>
           <label id="label">{{curr_strategy}}</label>
+      </form>
+      <br><br>
+      <hr>
+      <h3>Download log file</h3>
+      <form id="getform"  action = "http://{{ rest_host }}:{{ rest_port }}/log" method = "GET" enctype = "multipart/form-data">
+         <button type="submit">Download</button><br/><br/>
+      </form>
+      <form id="getform"  action = "http://{{ rest_host }}:{{ rest_port }}/clearlog" method = "GET" enctype = "multipart/form-data">
+         <button type="submit">Clear Log</button><br/><br/>
       </form>
    </body>
 </html>

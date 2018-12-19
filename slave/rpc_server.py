@@ -20,13 +20,14 @@ from random import shuffle
 from node import Node
 from os import walk
 from lead import LeadNode
+import kodo
 
 
 controller = None
 ip = None
 port = None
 mac = None
-
+folder = "upload/"
 
 def success():
     return {"code": 200, "msg": "Success"}
@@ -51,7 +52,7 @@ class Server(threading.Thread):
 
     @dispatcher.add_method
     def write_file(**kwargs):
-        with open(kwargs["name"], "w") as file:
+        with open(folder+kwargs["name"], "w") as file:
             file.write(kwargs["content"].decode('hex'))
             return success()
         return failure()
@@ -68,8 +69,25 @@ class Server(threading.Thread):
         kodo_packages = []
         if coded == False:
             print("not coded")
+            symbol_size = 4096
+            print(content)
+            print(type(content))
+            symbols = len(content.decode('hex')) / symbol_size
+            field = kodo.field.binary8
+            factory_encoder = kodo.RLNCEncoderFactory(field, symbols, symbol_size)
+            encoder = factory_encoder.build()
+            encoder.set_const_symbols(content)
+            encoder.set_systematic_off()
+            encoded_packets = []
+            packets_count = symbols + loses
+            # print("After packets_count")
+            for i in range(packets_count):
+                encoded_packets.append(encoder.write_payload())
+            print("Encoder end")
+            kodo_packages = encoded_packets
+            print(len(kodo_packages))
             #kodo_packages = encypt_with_kodo(content) TODO: FIX THIS YOU HAVE TO ENCODE HERE
-            kodo_packages = list([content,content,content,content]) # TODO: DELETE THIS IT IS ONLY USED FOR TESTING
+            #kodo_packages = list([content,content,content,content]) # TODO: DELETE THIS IT IS ONLY USED FOR TESTING
         else:
             for cod in json.loads(content):
                 kodo_packages.append(cod["pack"])
@@ -78,8 +96,8 @@ class Server(threading.Thread):
         if not kodo_packages:
             print("done")
             return success()
-        with open(kodo_filename, "w") as file:
-            file.write(kodo_packages.pop().decode('hex'))
+        with open(folder+kodo_filename, "w") as file:
+            file.write(kodo_packages.pop())
         controller.make_payload("register_location", {"file_name": kwargs["name"], "location": mac})
         new_nodes = []
         for node in nodes:
@@ -91,7 +109,7 @@ class Server(threading.Thread):
             print("sending to node: {} on {}".format(node.mac, node.ip))
             if len(kodo_packages) == 0:
                 return  success()
-            thread = threading.Thread(target=node.write_kodo_repeat,args=(filename, kodo_packages, loses, kwargs["nodes"], True, index+1))
+            thread = threading.Thread(target=node.write_kodo_repeat,args=(filename, kodo_packages, loses, kwargs["nodes"], True, int(index)+1))
             thread.start()
             #node.write_kodo_repeat(filename, kodo_packages, loses, kwargs["nodes"], True, index+1)
             break
@@ -103,17 +121,22 @@ class Server(threading.Thread):
     @dispatcher.add_method
     def write_file_repeat(**kwargs):
         print('you reached the write_file_repeat function')
-        with open(kwargs["name"], "w") as file:
+        with open(folder+kwargs["name"], "w") as file:
             print("write file")
             file.write(kwargs["content"].decode('hex'))
         replications = kwargs["ttl"] - 1
-        payload = controller.make_payload("register_location",{"file_name":kwargs["name"],"location":mac})
+        payload = controller.make_payload("register_location",{"file_name":kwargs["name"],"location":mac,"size":len(kwargs["content"].decode('hex'))})
         controller.leadNode.call(payload)
         print("replication {} -> {}".format(kwargs["ttl"],replications))
         if replications == 0:
             return success()
         else:
             nodes = json.loads(kwargs["nodes"])
+            i = 0
+            for node in nodes:
+                if node['mac'] == mac:
+                    nodes.pop(i)
+                i = i+1
             for node in nodes:
                 print(node)
                 if node['mac'] == mac:
@@ -121,7 +144,7 @@ class Server(threading.Thread):
                 else:
                     print("send to other node")
                     new_node = Node(node['mac'],node['ip'],node['port'],node['units'])
-                    new_node.write_repeat(kwargs["name"],kwargs["content"],replications,kwargs["nodes"])
+                    new_node.write_repeat(kwargs["name"],kwargs["content"],replications,json.dumps(nodes))
                     break;
             print("no more nodes")
             return success()
@@ -129,21 +152,22 @@ class Server(threading.Thread):
 
     @dispatcher.add_method
     def read_file(**kwargs):
-        print('file requested')
         filename = kwargs["name"]
-        if ".kodo." in filename: #IF WE DON*T REQUEST A ENCODED FILE JUST RETURN IT
-            print("write file {}".format(filename))
-            with open(filename, "rb") as file:
+        print("Read File {}".format(filename))
+        if ".kodo." not in filename: #IF WE DON*T REQUEST A ENCODED FILE JUST RETURN IT
+            print("read file {}".format(filename))
+            with open(folder+filename, "rb") as file:
                 return file.read().encode('hex') # TODO: Serialize before return
         else: #IF WE DO REQUEST A ENCODED FILE ALL MUST BE RETURNED
             f = []
             files = []
             for (dirpath, dirnames, filenames) in walk(os.getcwd()):
                 f.extend(filenames)
+            print(f)
             for path_filename in f:
-                if ".kodo." in path_filename:
+                if filename in path_filename:
                     print(path_filename)
-                    with open(path_filename, "rb") as file:
+                    with open(folder+path_filename, "rb") as file:
                         files.append(file.read().encode('hex'))
             return files
         return failure()
@@ -193,5 +217,6 @@ class Server(threading.Thread):
     def application(self, request):
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         return Response(response.json, mimetype='application/json')
+
 
 

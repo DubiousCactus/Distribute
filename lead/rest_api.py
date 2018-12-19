@@ -71,12 +71,26 @@ class REST():
                 return response
         return jsonify({"msg": "File name not present in request"})
 
+    @app.route('/log/', methods=['GET'])
+    def get_log():
+        return send_file(open("log.txt", "rb"),
+                             attachment_filename="log.txt",
+                             as_attachment=True)
+    @app.route('/clearlog/', methods=['GET'])
+    def clear_log():
+        print("clear file")
+        f = open('log.txt', 'w')
+        f.write("")
+        f.close()
+        return render_template('upload.html', rest_host=ip, rest_port=port, entries=controller.get_ledger_entries(),
+                               strategies=controller.getstrategies(), upload_status="",
+                               curr_strategy=controller.getcurrentStrategy())
+
 
     @app.route('/strategy', methods=['GET'])
     def set_strategy():
         if 'strategy_name' in request.args:
             #CHANGE LEDGER
-            print("attname {}".format(request.args.get('attname')))
             controller.set_strategy(request.args.get('strategy_name'), request.args.get('attname'))
             return render_template('upload.html', rest_host = ip, rest_port = port, entries = controller.get_ledger_entries(),
                                    strategies = controller.getstrategies(), upload_status = "", curr_strategy = controller.getcurrentStrategy())

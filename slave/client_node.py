@@ -60,8 +60,8 @@ class ClientNode:
 
 
     def get_ip(self):
-        return "localhost"
-        #return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+        #return "localhost"
+        return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 
 
     def register(self):

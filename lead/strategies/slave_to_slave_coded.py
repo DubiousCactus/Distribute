@@ -11,6 +11,7 @@ Slave to slave with coding
 
 from . import Strategy
 from random import shuffle
+import time
 
 class Slave_to_slave_coded(Strategy):
     def __init__(self, this_controller, desc, losses):
@@ -21,15 +22,28 @@ class Slave_to_slave_coded(Strategy):
         self.nodes = []
 
     def store_file(self, file_bytes, file_name):
+        f = open("log.txt", "a+")
+        f.write("{}; Enter Strategy: Slave_to_slave_coded with {} Replication and {} nodes\n".format(
+            int(round(time.time() * 1000)), self.losses, len(self.nodes)))
+        f.write("{}; Slave_to_slave_coded: Find and Shuffle nodes\n".format(int(round(time.time() * 1000))))
+
         self.nodes = Strategy(Slave_to_slave_coded, self).getNodes()
-        print("From strategy:")
         shuffle(self.nodes)
-        print("number of nodes: {}".format(len(self.nodes)))
+        f.write("{}; Slave_to_slave_coded: nodes shuffled\n".format(int(round(time.time() * 1000))))
         if not self.nodes:
+            f.write("{}; Slave_to_slave_coded: No Nodes available\n".format(int(round(time.time() * 1000))))
+            f.close()
             return False
         for node in self.nodes:
+            f.write("{}; Slave_to_slave_coded: Sending file ({}) to {}\n".format(int(round(time.time() * 1000)),file_name,node.mac))
             response = node.write_kodo_repeat(file_name, file_bytes, self.losses, self.nodes)
+            f.write("{}; Slave_to_slave_coded: File ({}) send to {} success\n".format(int(round(time.time() * 1000)),
+                                                                                        file_name, node.mac))
+            f.write("{}; Finish Strategy: Slave_to_slave_coded with {} Replication and {} nodes\n".format(
+                int(round(time.time() * 1000)), self.losses, len(self.nodes)))
+            f.close()
             return response
+        f.close()
         return False
 
     def retrieve_file(self, file_name, locations):

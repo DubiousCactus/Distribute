@@ -20,10 +20,10 @@ class LeadNode:
         self.config = config
         self._version = config['version']
         self.strategy = None
-        self.set_strategy(config['strategy'],0)
+        self.db = TinyDB('ledger.json')
+        self.set_strategy(config['strategy'],1)
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(self, config['rpc_host'], config['rpc_port'])
-        self.db = TinyDB('ledger.json')
 
     def start(self):
         self.rpc.start()
@@ -54,9 +54,9 @@ class LeadNode:
 
     def set_strategy(self, choice, att):
         if str(choice) == "master_to_slave_replica":
-            self.strategy = Master_to_slave_replica(self,"master_to_slave_replica with {} replications".format(att),att)
+            self.strategy = Master_to_slave_replica(self,"master_to_slave_replica with {} replications".format(att,slice), att)
         if str(choice) == "slave_to_slave_replica":
-            self.strategy = Slave_to_slave_replica(self,"slave_to_slave_replica with {} replication".format(att),att)
+            self.strategy = Slave_to_slave_replica(self,"slave_to_slave_replica with {} replication".format(att,slice), att)
         if str(choice) == "master_to_slave_coded":
             self.strategy = Master_to_slave_coded(self,"master_to_slave_coded with {} loses".format(att),att)
         if str(choice) == "slave_to_slave_coded":
@@ -77,8 +77,8 @@ class LeadNode:
         return "{}".format(self.strategy.description)
 
 
-    def add_to_ledger(self, file_name, location):
-        self.db.insert({'file_name': file_name, 'location': location})
+    def add_to_ledger(self, file_name, location,size):
+        self.db.insert({'file_name': file_name, 'location': location,'size':size})
 
 
     def get_ledger_entries(self):

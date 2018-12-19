@@ -53,3 +53,7 @@ class Strategy(object):
             node = Node(dbnode['mac'],dbnode['ip'],dbnode['port'],dbnode['units'])
             self.nodes.append(node)
         return self.nodes
+
+    def getFileSize(self, filename):
+        file = self.ledger.get(Query().file_name == filename)
+        return file['size']

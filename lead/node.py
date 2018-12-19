@@ -26,12 +26,10 @@ class Node:
 
 
     def write(self, filename, bytes):
-        print("write file to node on ip:{} port:{}".format(self.ip,self.port))
         payload = self.__make_payload("write_file", {"name": filename, "content": bytes.encode('hex')})
         return self.__remote_call(payload)
 
     def write_kodo_repeat(self, filename, bytes, loses, nodes):
-        print("write file to node on ip:{} port:{}".format(self.ip,self.port))
         payload = self.__make_payload("write_files_kodo_repeat", {"name": filename, "content": bytes.encode('hex'), "loses":loses, "nodes":self.jsonityNodes(nodes), "coded":False,"index":0})
         return self.__remote_call(payload)
 
