@@ -5,6 +5,7 @@ import threading
 
 from node import Node
 
+from subprocess import call
 from tinydb import TinyDB, Query
 from werkzeug import secure_filename
 from werkzeug.serving import run_simple
@@ -56,8 +57,9 @@ class RPC(threading.Thread):
         dispatcher.add_method(RPC.register_location)
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         print("RPC server running... Ready to deploy!")
+        call([os.getcwd() + '/deploy.sh'])
         return Response(response.json, mimetype='application/json')
 
 
     def run(self):
-        run_simple(ip, port, self.application)
+        run_simple(ip, port, self.application, use_reloader=True)
