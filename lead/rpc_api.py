@@ -10,7 +10,7 @@ from tinydb import TinyDB, Query
 from werkzeug import secure_filename
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
-from jsonrpc import JSONRPCResponseManager, Dispatcher
+from jsonrpc import JSONRPCResponseManager, dispatcher
 
 '''
 This class opens a connection for nodes to register on using RPC
@@ -22,6 +22,7 @@ db = TinyDB('db.json')
 nodes_db = db.table('nodes', cache_size=0)
 ledger_db = db.table('ledger', cache_size=0)
 
+
 class RPC(threading.Thread):
 
     def __init__(self, this_ip, this_port):
@@ -31,30 +32,46 @@ class RPC(threading.Thread):
         port = this_port
 
 
+    @dispatcher.add_method
     def register_node(**kwargs):
+        f = open("log.txt", "a+")
         ip = kwargs["ip"]
         mac = kwargs["mac"]
         port = kwargs["port"]
         units = kwargs["units"]
+        f.write("{};[!] New connection established with Node of MAC={} and IP={}\n".format(int(round(time.time() * 1000)),mac, ip))
+        if(kwargs["version"] > controller._version):
+            f.write("{}; Updating code on node with MAC={]\n".format(int(round(time.time() * 1000)),mac))
+            call([os.getcwd() + '/deploy.sh', ip])
+            f.write("{}; Node MAC={} updated\n".format(int(round(time.time() * 1000)),mac))
+            sys.stdout.close()
+            f.close()
+            return { "code": 200, "msg": "Updating slave..." }
+        else:
+            if(db.search(Query().mac == mac)):
+                f.write("{}; Updating node MAC={} in db\n".format(int(round(time.time() * 1000)),mac))
+                nodes_db.update({'mac': mac, 'ip': ip, 'port': port, 'units': units}, Query().mac == mac)
+                f.write("{}; db for MAC={} updated\n".format(int(round(time.time() * 1000)),mac))
+            else:
+                f.write("{}; Adding node MAC={} to db\n".format(int(round(time.time() * 1000)),mac))
+                nodes_db.insert({'mac': mac, 'ip': ip, 'port': port, 'units': units})
+                f.write("{}; MAC={} Added to db\n".format(int(round(time.time() * 1000)),mac))
+            f.close()
+            return { "code": 200, "msg": "Success." }
 
-        print("[!] New connection established with Node of MAC={} and IP={}".format(mac, ip))
-        nodes_db.insert({'ip': ip, 'mac': mac, 'port': port, 'units': units})
-        return { "code": 200, "msg": "Success." }
-
-
+    @dispatcher.add_method
     def register_location(**kwargs):
+        f = open("log.txt", "a+")
         file_name = kwargs["file_name"]
-        location = kwargs["location"] # Node mac
-        print("[*] Adding {} to registry for file '{}'".format(location,
-                                                               file_name))
+        location = kwargs["location"]  # Node mac
+        size = kwargs["size"]
+        f.write("{}; Adding MAC={} to registry for file '{}'".format(int(round(time.time() * 1000)),location, file_name))
         ledger_db.insert({'file_name': file_name, 'location': location})
-
+        f.write("{}; File ({}) for MAC={} add to register".format(int(round(time.time() * 1000)),location, file_name))
+        f.close()
 
     @Request.application
     def application(self, request):
-        dispatcher = Dispatcher()
-        dispatcher.add_method(RPC.register_node)
-        dispatcher.add_method(RPC.register_location)
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         print("RPC server running... Ready to deploy!")
         call([os.getcwd() + '/deploy.sh'])
@@ -62,4 +79,4 @@ class RPC(threading.Thread):
 
 
     def run(self):
-        run_simple(ip, port, self.application, use_reloader=True)
+        run_simple(ip, port, self.application)

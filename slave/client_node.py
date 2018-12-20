@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+
 
 import json
 import netifaces as ni
@@ -6,7 +6,7 @@ import netifaces as ni
 from node import Node
 from lead import LeadNode
 from rpc_server import Server
-
+import time
 from uuid import getnode as get_mac
 
 
@@ -15,11 +15,10 @@ class ClientNode:
     def __init__(self, config):
         self.leadNode = LeadNode(config['lead_ip'], config['lead_port'])
         self.port = config['port']
-        self.server = None
         self._version = config['version']
         self.storage_units = config['storage_units']
         self.neighbours = {}
-        self.server = Server(self, self.get_ip(), self.port)
+        self.server = Server(self, hex(get_mac()), self.get_ip(), self.port)
 
 
     def start(self):
@@ -61,22 +60,29 @@ class ClientNode:
 
 
     def get_ip(self):
+        #return "localhost"
         return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 
 
     def register(self):
-        payload = self.make_payload(
-            "register_node",
-            {
-                "ip": self.get_ip(),
-                "mac": hex(get_mac()),
-                "version": self._version,
-                "port": self.port,
-                "units": self.storage_units
-            }
-        )
-        response = self.leadNode.call(payload)
-        # TODO: Check response
+        try:
+            payload = self.make_payload(
+                "register_node",
+                {
+                    "ip": self.get_ip(),
+                    "mac": hex(get_mac()),
+                    "version": self._version,
+                    "port": self.port,
+                    "units": self.storage_units
+                }
+            )
+            response = self.leadNode.call(payload)
+        except:
+            time.sleep(20)
+            self.register()
+
+
+    # TODO: Check response
 
 
 

@@ -1,0 +1,58 @@
+1542952152978; Enter Strategy: Master_to_slave_coded with 3 Loses and 0 nodes
+1542952152978; Master_to_slave_coded: Find and Shuffle nodes
+1542952152985; Master_to_slave_coded: nodes shuffled
+1542952152985; Master_to_slave_coded: Enter encoding
+1542952152989; Master_to_slave_coded Encoding starts with data length:1048576, symbol_size: 262144, symbols: 4 
+1542952153130; Master_to_slave_coded Encoded 16 packages successfully
+1542952153131; Master_to_slave_coded: Sending file (1mb) to 0xb827eb35f825L
+1542952153296; Master_to_slave_coded: File (1mb) send to 0xb827eb35f825L success
+1542952153296; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb35f825L
+1542952153341; Master_to_slave_coded: Sending file (1mb) to 0xb827ebe78e48L
+1542952153497; Master_to_slave_coded: File (1mb) send to 0xb827ebe78e48L success
+1542952153497; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827ebe78e48L
+1542952153531; Master_to_slave_coded: Sending file (1mb) to 0xb827eb571999L
+1542952153677; Master_to_slave_coded: File (1mb) send to 0xb827eb571999L success
+1542952153677; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb571999L
+1542952153711; Master_to_slave_coded: Sending file (1mb) to 0xb827eb204bc5L
+1542952153866; Master_to_slave_coded: File (1mb) send to 0xb827eb204bc5L success
+1542952153866; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb204bc5L
+1542952153899; Master_to_slave_coded: Sending file (1mb) to 0xb827eb35f825L
+1542952154043; Master_to_slave_coded: File (1mb) send to 0xb827eb35f825L success
+1542952154043; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb35f825L
+1542952154076; Master_to_slave_coded: Sending file (1mb) to 0xb827ebe78e48L
+1542952154225; Master_to_slave_coded: File (1mb) send to 0xb827ebe78e48L success
+1542952154225; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827ebe78e48L
+1542952154261; Master_to_slave_coded: Sending file (1mb) to 0xb827eb571999L
+1542952154423; Master_to_slave_coded: File (1mb) send to 0xb827eb571999L success
+1542952154423; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb571999L
+1542952154454; Master_to_slave_coded: Sending file (1mb) to 0xb827eb204bc5L
+1542952154606; Master_to_slave_coded: File (1mb) send to 0xb827eb204bc5L success
+1542952154606; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb204bc5L
+1542952154642; Master_to_slave_coded: Sending file (1mb) to 0xb827eb35f825L
+1542952154792; Master_to_slave_coded: File (1mb) send to 0xb827eb35f825L success
+1542952154792; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb35f825L
+1542952154825; Master_to_slave_coded: Sending file (1mb) to 0xb827ebe78e48L
+1542952154995; Master_to_slave_coded: File (1mb) send to 0xb827ebe78e48L success
+1542952154995; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827ebe78e48L
+1542952155028; Master_to_slave_coded: Sending file (1mb) to 0xb827eb571999L
+1542952155169; Master_to_slave_coded: File (1mb) send to 0xb827eb571999L success
+1542952155169; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb571999L
+1542952155201; Master_to_slave_coded: Sending file (1mb) to 0xb827eb204bc5L
+1542952155362; Master_to_slave_coded: File (1mb) send to 0xb827eb204bc5L success
+1542952155362; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb204bc5L
+1542952155397; Master_to_slave_coded: Sending file (1mb) to 0xb827eb35f825L
+1542952155559; Master_to_slave_coded: File (1mb) send to 0xb827eb35f825L success
+1542952155559; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb35f825L
+1542952155589; Master_to_slave_coded: Sending file (1mb) to 0xb827ebe78e48L
+1542952155731; Master_to_slave_coded: File (1mb) send to 0xb827ebe78e48L success
+1542952155731; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827ebe78e48L
+1542952155763; Master_to_slave_coded: Sending file (1mb) to 0xb827eb571999L
+1542952155913; Master_to_slave_coded: File (1mb) send to 0xb827eb571999L success
+1542952155913; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb571999L
+1542952155945; Master_to_slave_coded: Sending file (1mb) to 0xb827eb204bc5L
+1542952156104; Master_to_slave_coded: File (1mb) send to 0xb827eb204bc5L success
+1542952156104; Master_to_slave_coded adding file (1mb) to ledger on MAC=0xb827eb204bc5L
+1542952156135; Finish Strategy: Master_to_slave_coded with 3 Loses and 4 nodes
+1542952162567; Master_to_slave_coded Decoding 6 packages
+1542952162545; Master_to_slave_coded receive file (1mb) as kodo from node with MAC=0xb827eb571999L
+1542952162689; Master_to_slave_coded Finished decoding file (1mb) from node with MAC=0xb827eb571999L

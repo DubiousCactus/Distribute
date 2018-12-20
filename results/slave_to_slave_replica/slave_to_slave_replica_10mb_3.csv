@@ -1,0 +1,30 @@
+1542946285128; Adding MAC=0xb827eb35f825L to registry for file '10mb'
+1542946285148; File (0xb827eb35f825L) for MAC=10mb add to register
+1542946294320; Adding MAC=0xb827eb204bc5L to registry for file '10mb'
+1542946294337; File (0xb827eb204bc5L) for MAC=10mb add to register
+1542947219549;[!] New connection established with Node of MAC=0xb827eb204bc5L and IP=164.24.1.53
+1542947219567; Adding node MAC=0xb827eb204bc5L to db
+1542947219587; MAC=0xb827eb204bc5L Added to db
+1542947227449;[!] New connection established with Node of MAC=0xb827eb571999L and IP=164.24.1.91
+1542947227451; Adding node MAC=0xb827eb571999L to db
+1542947227468; MAC=0xb827eb571999L Added to db
+1542947238660;[!] New connection established with Node of MAC=0xb827eb35f825L and IP=164.24.1.15
+1542947238661; Adding node MAC=0xb827eb35f825L to db
+1542947238678; MAC=0xb827eb35f825L Added to db
+1542947244844;[!] New connection established with Node of MAC=0xb827ebe78e48L and IP=164.24.1.41
+1542947244846; Adding node MAC=0xb827ebe78e48L to db
+1542947244864; MAC=0xb827ebe78e48L Added to db
+1542947296994; Adding MAC=0xb827ebe78e48L to registry for file '10mb'
+1542947297018; File (0xb827ebe78e48L) for MAC=10mb add to register
+1542947306162; Adding MAC=0xb827eb204bc5L to registry for file '10mb'
+1542947306219; File (0xb827eb204bc5L) for MAC=10mb add to register
+1542947328177; Adding MAC=0xb827eb35f825L to registry for file '10mb'
+1542947328197; File (0xb827eb35f825L) for MAC=10mb add to register
+1542947291884; Enter Strategy: Slave_to_slave_replica with 3 Replication and 0 nodes
+1542947291884; Slave_to_slave_replica: Find and Shuffle nodes
+1542947291889; Slave_to_slave_replica: nodes shuffled
+1542947291889; Slave_to_slave_replica: Sending file (10mb) to 0xb827ebe78e48L
+1542947328884; Slave_to_slave_replica: File (10mb) send to 0xb827ebe78e48L success
+1542947328884; Finish Strategy: Slave_to_slave_replica with 3 Replication and 4 nodes
+1542947382899; Slave_to_slave_replica Requesting file (10mb)
+1542947387103; Slave_to_slave_replica file (10mb) Rechived

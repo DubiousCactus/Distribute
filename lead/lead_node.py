@@ -7,7 +7,6 @@ import json
 import errno
 import strategies
 
-from node import Node
 from rpc_api import RPC
 from rest_api import REST
 
@@ -25,6 +24,7 @@ class LeadNode:
         self.config = config
         self._version = config['version']
         self.nodes = {}
+        self.strategy = "No strategy"
         self.rest = REST(self, config['api_host'],  config['api_port'])
         self.rpc = RPC(config['rpc_host'], config['rpc_port'])
         self.set_strategy(config['strategy'])
@@ -80,13 +80,19 @@ class LeadNode:
             **self.config['strategies'][choice]
         )
 
+    def get_strategies(self):
+        return list(self.config['strategies'].keys())
+
+
+    def get_current_strategy(self):
+        return self.strategy.description
+
 
     def get_ledger_entries(self):
         return list(set(map(
             lambda entry: entry['file_name'],
             self.ledger_db.search(Query().file_name.exists())
         )))
-
 
 
 if __name__ == '__main__':

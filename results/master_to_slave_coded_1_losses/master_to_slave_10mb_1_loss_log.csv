@@ -1,0 +1,32 @@
+TimeStamp;Commands;Fin Strategy (ms);Encoder (ms);Decoder (ms);File register (ms);Download (ms)
+1542944568337,00; Enter Strategy: Master_to_slave_coded with 1 Loses and 0 nodes;6522,00;392,00;6954,00;6048,00;6954,00
+1542944568338,00; Master_to_slave_coded: Find and Shuffle nodes;;;;;
+1542944568341,00; Master_to_slave_coded: nodes shuffled;;;;;
+1542944568341,00; Master_to_slave_coded: Enter encoding;;;;;
+1542944568398,00; Master_to_slave_coded Encoding starts with data length:10485760, symbol_size: 2621440, symbols: 4 ;;;;;
+1542944568790,00; Master_to_slave_coded Encoded 5 packages successfully;;;;;
+1542944568795,00; Master_to_slave_coded: Sending file (10mb) to 0xb827eb571999L;;;;;
+1542944570015,00; Master_to_slave_coded: File (10mb) send to 0xb827eb571999L success;;;;;
+1542944570015,00; Master_to_slave_coded adding file (10mb) to ledger on MAC=0xb827eb571999L;;;;;
+1542944570034,00; Master_to_slave_coded: Sending file (10mb) to 0xb827eb35f825L;;;;;
+1542944571214,00; Master_to_slave_coded: File (10mb) send to 0xb827eb35f825L success;;;;;
+1542944571215,00; Master_to_slave_coded adding file (10mb) to ledger on MAC=0xb827eb35f825L;;;;;
+1542944571231,00; Master_to_slave_coded: Sending file (10mb) to 0xb827eb204bc5L;;;;;
+1542944572412,00; Master_to_slave_coded: File (10mb) send to 0xb827eb204bc5L success;;;;;
+1542944572412,00; Master_to_slave_coded adding file (10mb) to ledger on MAC=0xb827eb204bc5L;;;;;
+1542944572428,00; Master_to_slave_coded: Sending file (10mb) to 0xb827ebe78e48L;;;;;
+1542944573631,00; Master_to_slave_coded: File (10mb) send to 0xb827ebe78e48L success;;;;;
+1542944573631,00; Master_to_slave_coded adding file (10mb) to ledger on MAC=0xb827ebe78e48L;;;;;
+1542944573648,00; Master_to_slave_coded: Sending file (10mb) to 0xb827eb571999L;;;;;
+1542944574843,00; Master_to_slave_coded: File (10mb) send to 0xb827eb571999L success;;;;;
+1542944574843,00; Master_to_slave_coded adding file (10mb) to ledger on MAC=0xb827eb571999L;;;;;
+1542944574859,00; Finish Strategy: Master_to_slave_coded with 1 Loses and 4 nodes;;;;;
+1542944584650,00; Master_to_slave_coded Decoding 2 packages;;;;;
+1542944588332,00; Master_to_slave_coded Decoding 4 packages;;;;;
+1542944591559,00; Master_to_slave_coded Decoding 6 packages;;;;;
+1542944584625,00; Master_to_slave_coded receive file (10mb) as kodo from node with MAC=0xb827eb571999L;;;;;
+1542944585228,00; Master_to_slave_coded could not decode with the amount of data given;;;;;
+1542944588315,00; Master_to_slave_coded receive file (10mb) as kodo from node with MAC=0xb827eb204bc5L;;;;;
+1542944589612,00; Master_to_slave_coded could not decode with the amount of data given;;;;;
+1542944591544,00; Master_to_slave_coded receive file (10mb) as kodo from node with MAC=0xb827eb571999L;;;;;
+1542944591604,00; Master_to_slave_coded Finished decoding file (10mb) from node with MAC=0xb827eb571999L;;;;;

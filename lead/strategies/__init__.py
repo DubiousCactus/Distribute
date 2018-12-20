@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
 #
-# Copyright © 2018 theomorales <theomorales@Theos-MacBook-Pro.local>
 #
 # Distributed under terms of the MIT license.
 
@@ -28,6 +27,9 @@ def get(strategy_name, controller, *args, **kwargs):
     else:
         if not issubclass(strategy_class, Strategy):
             raise ImportError("{} is currently not implemented.".format(strategy_class))
+
+
+
 
     return instance
 

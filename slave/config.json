@@ -1,6 +1,6 @@
 {
   "version": "0.5",
-  "lead_ip": "164.24.1.1",
+  "lead_ip": "localhost",
   "lead_port": 7001,
   "port": 8000,
   "storage_units": 1

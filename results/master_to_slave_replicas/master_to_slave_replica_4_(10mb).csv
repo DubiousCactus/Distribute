@@ -1,0 +1,18 @@
+1542944924042; Enter Strategy: Master_to_slave_replica with 4 Replication and 0 nodes
+1542944924042; Master_to_slave_replica: Find and Shuffle nodes
+1542944924045; Master_to_slave_replica: nodes shuffled
+1542944924045; Master_to_slave_replica: Sending file (10mb) to 0xb827ebe78e48L
+1542944928668; Master_to_slave_replica: File (10mb) send to 0xb827ebe78e48L success
+1542944928669; Master_to_slave_replica adding file (10mb) to ledger on MAC=0xb827ebe78e48L
+1542944928687; Master_to_slave_replica: Sending file (10mb) to 0xb827eb35f825L
+1542944933362; Master_to_slave_replica: File (10mb) send to 0xb827eb35f825L success
+1542944933362; Master_to_slave_replica adding file (10mb) to ledger on MAC=0xb827eb35f825L
+1542944933377; Master_to_slave_replica: Sending file (10mb) to 0xb827eb571999L
+1542944938014; Master_to_slave_replica: File (10mb) send to 0xb827eb571999L success
+1542944938014; Master_to_slave_replica adding file (10mb) to ledger on MAC=0xb827eb571999L
+1542944938033; Master_to_slave_replica: Sending file (10mb) to 0xb827eb204bc5L
+1542944942671; Master_to_slave_replica: File (10mb) send to 0xb827eb204bc5L success
+1542944942671; Master_to_slave_replica adding file (10mb) to ledger on MAC=0xb827eb204bc5L
+1542944942687; Finish Strategy: Master_to_slave_replica with 4 Replication and 4 nodes
+1542944962250; Master_to_slave_replica Requesting file (10mb)
+1542944966035; Master_to_slave_replica file (10mb) Rechived

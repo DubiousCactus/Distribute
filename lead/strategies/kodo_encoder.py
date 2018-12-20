@@ -2,7 +2,7 @@ import os
 import sys
 import kodo
 
-class KodoEncoder():
+class KodoEncoder:
     def __init__(self, symbols, symbol_size, redundancy=2):
         self.symbols = symbols
         self.n_nodes = 4
