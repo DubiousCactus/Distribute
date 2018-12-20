@@ -28,7 +28,7 @@ class Slave_to_slave_coded(Strategy):
         f.write("{}; Slave_to_slave_coded: Find and Shuffle nodes\n".format(int(round(time.time() * 1000))))
 
         self.nodes = Strategy(Slave_to_slave_coded, self).getNodes()
-        shuffle(self.nodes)
+        self.nodes = shuffle(self.nodes)
         f.write("{}; Slave_to_slave_coded: nodes shuffled\n".format(int(round(time.time() * 1000))))
         if not self.nodes:
             f.write("{}; Slave_to_slave_coded: No Nodes available\n".format(int(round(time.time() * 1000))))

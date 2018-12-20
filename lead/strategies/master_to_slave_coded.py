@@ -29,7 +29,7 @@ class Master_to_slave_coded(Strategy):
         f.write("{}; Enter Strategy: Master_to_slave_coded with {} Loses and {} nodes\n".format(int(round(time.time() * 1000)),self.losses,len(self.nodes)))
         f.write("{}; Master_to_slave_coded: Find and Shuffle nodes\n".format(int(round(time.time() * 1000))))
         self.nodes = Strategy(Master_to_slave_coded,self).getNodes()
-        shuffle(self.nodes)
+        self.nodes = shuffle(self.nodes)
         f.write("{}; Master_to_slave_coded: nodes shuffled\n".format(int(round(time.time() * 1000))))
         if not self.nodes:
             f.write("{}; Master_to_slave_coded: No Nodes available\n".format(int(round(time.time() * 1000))))

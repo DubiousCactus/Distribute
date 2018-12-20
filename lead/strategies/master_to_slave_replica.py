@@ -28,7 +28,7 @@ class Master_to_slave_replica(Strategy):
         f.write("{}; Enter Strategy: Master_to_slave_replica with {} Replication and {} nodes\n".format(int(round(time.time() * 1000)),self.nb_replicas,len(self.nodes)))
         f.write("{}; Master_to_slave_replica: Find and Shuffle nodes\n".format(int(round(time.time() * 1000))))
         self.nodes = Strategy(Master_to_slave_replica,self).getNodes()
-        shuffle(self.nodes)
+        self.nodes = shuffle(self.nodes)
         f.write("{}; Master_to_slave_replica: nodes shuffled\n".format(int(round(time.time() * 1000))))
         if not self.nodes:
             f.write("{}; Master_to_slave_replica: No Nodes available\n".format(int(round(time.time() * 1000))))
