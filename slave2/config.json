@@ -1,7 +1,0 @@
-{
-  "version": "0.5",
-  "lead_ip": "localhost",
-  "lead_port": 7001,
-  "port": 8001,
-  "storage_units": 1
-}
