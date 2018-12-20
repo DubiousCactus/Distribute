@@ -1,4 +1,5 @@
 import os
+import time
 import json
 import errno
 import threading
@@ -40,24 +41,16 @@ class RPC(threading.Thread):
         port = kwargs["port"]
         units = kwargs["units"]
         f.write("{};[!] New connection established with Node of MAC={} and IP={}\n".format(int(round(time.time() * 1000)),mac, ip))
-        if(kwargs["version"] > controller._version):
-            f.write("{}; Updating code on node with MAC={]\n".format(int(round(time.time() * 1000)),mac))
-            call([os.getcwd() + '/deploy.sh', ip])
-            f.write("{}; Node MAC={} updated\n".format(int(round(time.time() * 1000)),mac))
-            sys.stdout.close()
-            f.close()
-            return { "code": 200, "msg": "Updating slave..." }
+        if(db.search(Query().mac == mac)):
+            f.write("{}; Updating node MAC={} in db\n".format(int(round(time.time() * 1000)),mac))
+            nodes_db.update({'mac': mac, 'ip': ip, 'port': port, 'units': units}, Query().mac == mac)
+            f.write("{}; db for MAC={} updated\n".format(int(round(time.time() * 1000)),mac))
         else:
-            if(db.search(Query().mac == mac)):
-                f.write("{}; Updating node MAC={} in db\n".format(int(round(time.time() * 1000)),mac))
-                nodes_db.update({'mac': mac, 'ip': ip, 'port': port, 'units': units}, Query().mac == mac)
-                f.write("{}; db for MAC={} updated\n".format(int(round(time.time() * 1000)),mac))
-            else:
-                f.write("{}; Adding node MAC={} to db\n".format(int(round(time.time() * 1000)),mac))
-                nodes_db.insert({'mac': mac, 'ip': ip, 'port': port, 'units': units})
-                f.write("{}; MAC={} Added to db\n".format(int(round(time.time() * 1000)),mac))
-            f.close()
-            return { "code": 200, "msg": "Success." }
+            f.write("{}; Adding node MAC={} to db\n".format(int(round(time.time() * 1000)),mac))
+            nodes_db.insert({'mac': mac, 'ip': ip, 'port': port, 'units': units})
+            f.write("{}; MAC={} Added to db\n".format(int(round(time.time() * 1000)),mac))
+        f.close()
+        return { "code": 200, "msg": "Success." }
 
     @dispatcher.add_method
     def register_location(**kwargs):
@@ -74,7 +67,7 @@ class RPC(threading.Thread):
     def application(self, request):
         response = JSONRPCResponseManager.handle(request.data, dispatcher)
         print("RPC server running... Ready to deploy!")
-        call([os.getcwd() + '/deploy.sh'])
+        # call([os.getcwd() + '/deploy.sh'])
         return Response(response.json, mimetype='application/json')
 
 

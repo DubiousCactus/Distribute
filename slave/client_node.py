@@ -1,5 +1,4 @@
-
-
+import sys
 import json
 import netifaces as ni
 
@@ -12,7 +11,11 @@ from uuid import getnode as get_mac
 
 class ClientNode:
 
-    def __init__(self, config):
+    def __init__(self, config, debug=False):
+        self.debug = debug
+        if debug:
+            config['lead_ip'] = 'localhost'
+
         self.leadNode = LeadNode(config['lead_ip'], config['lead_port'])
         self.port = config['port']
         self._version = config['version']
@@ -60,8 +63,10 @@ class ClientNode:
 
 
     def get_ip(self):
-        #return "localhost"
-        return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+        if self.debug:
+            return "localhost"
+        else:
+            return ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 
 
     def register(self):
@@ -82,11 +87,10 @@ class ClientNode:
             self.register()
 
 
-    # TODO: Check response
-
 
 
 if __name__ == "__main__":
+    debug = (len(sys.argv) > 1 and sys.argv[1] == '--debug')
     with open('config.json') as config_file:
-        client = ClientNode(json.load(config_file))
+        client = ClientNode(json.load(config_file), debug)
         client.start()

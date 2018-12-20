@@ -26,36 +26,37 @@ class Master_to_slave_replica(Strategy):
         f.write("{}; Enter Strategy: Master_to_slave_replica with {} Replication and {} nodes\n".format(int(round(time.time() * 1000)),self.nb_replicas,len(self.nodes)))
         f.write("{}; Master_to_slave_replica: Find and Shuffle nodes\n".format(int(round(time.time() * 1000))))
         f.write("{}; Master_to_slave_replica: nodes shuffled\n".format(int(round(time.time() * 1000))))
-        print("From strategy:")
-        print(self.__controller.nodes)
-        nodes = shuffle(self.__controller.nodes)
-        print("Shuffled nodes:")
-        print(nodes)
-        if not self.nodes:
+        nodes_keys = list(self.__controller.nodes.keys())
+        shuffle(nodes_keys)
+        if not nodes_keys:
             f.write("{}; Master_to_slave_replica: No Nodes available\n".format(int(round(time.time() * 1000))))
             f.close()
             return False
         for n in range(self.nb_replicas):
-            for node in nodes:
+            for key, node in [(key, self.__controller.nodes[key]) for key in nodes_keys]:
                 print("Attempting to write to node {} ...".format(node.ip))
-                f.write("{}; Master_to_slave_replica: Sending file ({}) to {}\n".format(int(round(time.time() * 1000)), file_name, self.nodes[i].mac))
+                f.write("{}; Master_to_slave_replica: Sending file ({}) to {}\n".format(int(round(time.time() * 1000)), file_name,
+                        node.mac))
                 response = node.write(file_name, file_bytes)
-                print("Response: {}".format(reponse))
                 if response and response['result']['code'] == 200:
                     f.write(
                             "{}; Master_to_slave_replica: File ({}) send to {} success\n".format(int(round(time.time() * 1000)),
-                                                                                                 file_name, self.nodes[i].mac))
+                                                                                                 file_name,
+                                                                                                 node.mac))
                     f.write("{}; Master_to_slave_replica adding file ({}) to ledger on MAC={}\n".format(
-                                                                                                    int(round(time.time() * 1000)), file_name, self.nodes[i].mac))
+                                                                                                    int(round(time.time()
+                                                                                                              *
+                                                                                                              1000)),
+                        file_name, node.mac))
                     # self.__controller.add_to_ledger(file_name, node)
-                    nodes.remove(node) # No more than once per node
+                    nodes_keys.remove(key) # No more than once per node
                 else:
                     # If a node can't be written to, it should be considered fatal
                     f.close()
                     return False
             f.write("{}; Finish Strategy: Master_to_slave_replica with {} Replication and {} nodes\n".format(int(round(time.time() * 1000)),
                                                                                                                      self.nb_replicas,
-                                                                                                                     len(self.nodes)))
+                                                                                                                     len(self.__controller.nodes)))
             f.close()
             return True
 

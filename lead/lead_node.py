@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 import os
 import sys
 import time
@@ -7,6 +5,7 @@ import json
 import errno
 import strategies
 
+from node import Node
 from rpc_api import RPC
 from rest_api import REST
 

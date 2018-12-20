@@ -30,9 +30,9 @@ class REST:
             rest_host=ip,
             rest_port=port,
             entries=controller.get_ledger_entries(),
-            strategies=controller.getstrategies(),
+            strategies=controller.get_strategies(),
             upload_status="",
-            curr_strategy=controller.getcurrentStrategy()
+            curr_strategy=controller.get_current_strategy()
         )
 
 
@@ -50,11 +50,11 @@ class REST:
                     'upload.html', rest_host=ip,
                     rest_port=port,
                     entries=controller.get_ledger_entries(),
-                    strategies=controller.getstrategies(),
+                    strategies=controller.get_strategies(),
                     upload_status="{} successfully uploaded".format(
                         request.files['file'].filename
                     ),
-                    curr_strategy=controller.getcurrentStrategy()
+                    curr_strategy=controller.get_current_strategy()
                 )
             else:
                 response = jsonify({"msg": "File couldn't be written to nodes."})
@@ -64,9 +64,9 @@ class REST:
                     rest_host=ip,
                     rest_port=port,
                     entries=controller.get_ledger_entries(),
-                    strategies=controller.getstrategies(),
+                    strategies=controller.get_strategies(),
                     upload_status="Failed",
-                    curr_strategy=controller.getcurrentStrategy()
+                    curr_strategy=controller.get_current_strategy()
                 )
         return jsonify({"msg": "File not present in request"})
 
@@ -113,8 +113,8 @@ class REST:
             rest_host=ip,
             rest_port=port,
             entries=controller.get_ledger_entries(),
-            strategies=controller.getstrategies(), upload_status="",
-            curr_strategy=controller.getcurrentStrategy()
+            strategies=controller.get_strategies(), upload_status="",
+            curr_strategy=controller.get_current_strategy()
         )
 
 
