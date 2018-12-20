@@ -9,18 +9,19 @@
 RPC Server used to receive instructions from the lead node
 """
 
+import json
+import kodo
+import logging
 import threading
-import os
+
+from node import Node
+from lead import LeadNode
+
+from os import walk
+from random import shuffle
 from werkzeug.serving import run_simple
 from werkzeug.wrappers import Request, Response
 from jsonrpc import JSONRPCResponseManager, dispatcher
-import logging
-import json
-from random import shuffle
-from node import Node
-from os import walk
-from lead import LeadNode
-import kodo
 
 
 controller = None
@@ -47,15 +48,19 @@ class Server(threading.Thread):
         controller = this_controller
         logging.basicConfig()
 
+
     def run(self):
         run_simple(ip, port, self.application)
+
 
     @dispatcher.add_method
     def write_file(**kwargs):
         with open(folder+kwargs["name"], "w") as file:
-            file.write(kwargs["content"].decode('hex'))
-            return success()
+            if controller.write_file(kwargs["name"],
+                                     kwargs["content"].decode('hex')):
+                return success()
         return failure()
+
 
     #REQ: name, content, ttl, nodes, kodo_content
     @dispatcher.add_method
@@ -66,8 +71,9 @@ class Server(threading.Thread):
         coded = kwargs["coded"]
         index = kwargs["index"]
         content = kwargs["content"]
-        kodo_packages = []
-        if coded == False:
+        kodo_packets = []
+
+        if not coded:
             print("not coded")
             symbol_size = 4096
             print(content)
@@ -84,21 +90,21 @@ class Server(threading.Thread):
             for i in range(packets_count):
                 encoded_packets.append(encoder.write_payload())
             print("Encoder end")
-            kodo_packages = encoded_packets
-            print(len(kodo_packages))
-            #kodo_packages = encypt_with_kodo(content) TODO: FIX THIS YOU HAVE TO ENCODE HERE
-            #kodo_packages = list([content,content,content,content]) # TODO: DELETE THIS IT IS ONLY USED FOR TESTING
+            kodo_packets = encoded_packets
+            print(len(kodo_packets))
+            #kodo_packets = encypt_with_kodo(content) TODO: FIX THIS YOU HAVE TO ENCODE HERE
+            #kodo_packets = list([content,content,content,content]) # TODO: DELETE THIS IT IS ONLY USED FOR TESTING
         else:
             for cod in json.loads(content):
-                kodo_packages.append(cod["pack"])
+                kodo_packets.append(cod["pack"])
             print("is coded")
         kodo_filename = "{}.kodo.{}".format(filename,index)
-        if not kodo_packages:
+        if not kodo_packets:
             print("done")
             return success()
         with open(folder+kodo_filename, "w") as file:
-            file.write(kodo_packages.pop())
-        controller.make_payload("register_location", {"file_name": kwargs["name"], "location": mac})
+            file.write(kodo_packets.pop())
+            controller.register_location(kwargs["name"], mac)
         new_nodes = []
         for node in nodes:
             new_nodes.append(Node(node['mac'], node['ip'], node['port'], node['units']))
@@ -107,16 +113,19 @@ class Server(threading.Thread):
             if node.mac == mac:
                 continue
             print("sending to node: {} on {}".format(node.mac, node.ip))
-            if len(kodo_packages) == 0:
+            if len(kodo_packets) == 0:
                 return  success()
-            thread = threading.Thread(target=node.write_kodo_repeat,args=(filename, kodo_packages, loses, kwargs["nodes"], True, int(index)+1))
+            thread = threading.Thread(target=node.write_kodo_repeat,args=(filename,
+                                                                 kodo_packets, loses, kwargs["nodes"], True, int(index)+1))
             thread.start()
-            #node.write_kodo_repeat(filename, kodo_packages, loses, kwargs["nodes"], True, index+1)
+            #node.write_kodo_repeat(filename, kodo_packets, loses, kwargs["nodes"], True, index+1)
             break
         return success()
 
+
     def encypt_with_kodo(self, file_bytes):
         return list([file_bytes,file_bytes,file_bytes,file_bytes,file_bytes])
+
 
     @dispatcher.add_method
     def write_file_repeat(**kwargs):
@@ -150,6 +159,7 @@ class Server(threading.Thread):
             return success()
         return failure()
 
+
     @dispatcher.add_method
     def read_file(**kwargs):
         filename = kwargs["name"]
@@ -172,6 +182,7 @@ class Server(threading.Thread):
             return files
         return failure()
 
+
     @dispatcher.add_method
     def read_kodo_files(**kwargs):
         filename = kwargs["name"]
@@ -191,6 +202,7 @@ class Server(threading.Thread):
         return failure()
         return success()
 
+
     def decypt_with_kodo(self, file_bytes):
         print(file_bytes[0])
         return {"result":file_bytes[0]}
@@ -204,6 +216,7 @@ class Server(threading.Thread):
         else:
             return failure()
 
+
     @dispatcher.add_method
     def add_neighbour(**kwargs):
         if controller.add_neighbour(
@@ -212,6 +225,7 @@ class Server(threading.Thread):
             return success()
         else:
             return failure()
+
 
     @Request.application
     def application(self, request):

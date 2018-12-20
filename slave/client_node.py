@@ -41,6 +41,7 @@ class ClientNode:
     def write_file(self, name, content):
         with open(name, "wb") as file:
             file.write(content)
+            self.register_location(name)
             return True
 
         return False
@@ -87,6 +88,16 @@ class ClientNode:
             self.register()
 
 
+    def register_location(self, file_name):
+        respone = self.leadNode.call(
+            self.make_payload(
+                "register_location",
+                {
+                    "file_name": file_name,
+                    "location": hex(get_mac()),
+                }
+            )
+        )
 
 
 if __name__ == "__main__":

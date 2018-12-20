@@ -39,7 +39,7 @@ class Node:
         return self.__remote_call(payload)
 
 
-    def jsonitykodoPacks(self, packs):
+    def jsonify_kodo_packets(self, packs):
         jsonnodes = None
         for pack in packs:
             if jsonnodes is not None:
@@ -51,7 +51,7 @@ class Node:
         return "["+jsonnodes+"]"
 
     def write_kodo_repeat(self, filename, bytes, loses, nodes, coded, index):
-        payload = self.__make_payload("write_files_kodo_repeat", {"name": filename, "content": self.jsonitykodoPacks(bytes), "loses":loses, "nodes":nodes, "coded":coded,"index":index})
+        payload = self.__make_payload("write_files_kodo_repeat", {"name": filename, "content": self.jsonify_kodo_packets(bytes), "loses":loses, "nodes":nodes, "coded":coded,"index":index})
         return self.__remote_call(payload)
 
 

@@ -87,6 +87,10 @@ class LeadNode:
         return self.strategy.description
 
 
+    def add_to_ledger(self, file_name, location, size):
+        self.ledger_db.insert({"file_name": file_name, "location": location,
+                               "size": size})
+
     def get_ledger_entries(self):
         return list(set(map(
             lambda entry: entry['file_name'],

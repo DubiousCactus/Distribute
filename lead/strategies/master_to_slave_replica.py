@@ -48,7 +48,7 @@ class Master_to_slave_replica(Strategy):
                                                                                                               *
                                                                                                               1000)),
                         file_name, node.mac))
-                    # self.__controller.add_to_ledger(file_name, node)
+                    self.controller.add_to_ledger(file_name, node.mac, len(file_bytes))
                     nodes_keys.remove(key) # No more than once per node
                 else:
                     # If a node can't be written to, it should be considered fatal
@@ -63,7 +63,7 @@ class Master_to_slave_replica(Strategy):
 
     def retrieve_file(self, file_name, locations):
         f = open("log.txt", "a+")
-        for node in locations:
+        for keyk, node in self.__controller.nodes.items():
             print("retriving file: {}".format(file_name))
             f.write("{}; Master_to_slave_replica Requesting file ({})\n".format(int(round(time.time() * 1000)),file_name))
             response = node.read(file_name)
